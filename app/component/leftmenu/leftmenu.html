@@ -1,0 +1,106 @@
+<div class="row" style="border-bottom:2px solid white; padding-bottom:20px;">
+    <div class="col-md-2 offset-md-1">
+        <i style="color:white; font-size:30px;" class="glyphicon glyphicon-globe"></i>
+    </div>
+    <div class="col-md-9">
+        <p style="color:white; font-size:15px; margin-left:0px; margin-bottom:0px; margin-top:6px;">TPC Store Section</p>
+    </div>
+  </div>
+
+  <div class="left-tab-menu NavHome">
+    <p class="left-title">TPC Home</p>
+  </div>
+  <div class="left-tab-menu NavDataChemicals">
+    <p class="left-title">Data Chemicals</p>
+  </div>
+  <div class="left-tab-menu NavUsageChemicals">
+    <p class="left-title">สรุปยอดใช้สารเคมี</p>
+  </div>
+  <div class="left-tab-menu NavDocuments">
+    <p class="left-title">Document</p>
+  </div>
+  <div class="left-tab-menu NavAppSettings">
+    <p class="left-title">App Settings</p>
+</div>
+
+<div style="border-radius:6px; background-color:white; width:100px; margin-left:auto; margin-right:auto;margin-top:15px;">
+    <a target="_blank" href="https://scgchemicals.scg.com/lotusnotes/ROC_Store/Lists/Log_Access/By%20User.aspx"><p id="PageView" style="text-align:center; color:black; ">View: 1000000</p></a>
+</div>
+
+<script type="text/javascript">
+
+    var Navigation = {
+        1:{
+            PageTitle:'Home',
+            Url:'https://scgchemicals.scg.com/lotusnotes/ROC_Store/SitePages/index.aspx',
+            ElemMenu:'.NavHome',
+        },
+        2:{
+            PageTitle:'Data Chemicals',
+            Url:'https://scgchemicals.scg.com/lotusnotes/ROC_Store/SitePages/index.aspx?Page=DataChemicals',
+            ElemMenu:'.NavDataChemicals',
+        },
+        3:{
+            PageTitle:'สรุปยอดการใช้สารเคมี',
+            Url:'https://scgchemicals.scg.com/lotusnotes/ROC_Store/SitePages/index.aspx?Page=UsageChemicals',
+            ElemMenu:'.NavUsageChemicals',
+        },
+        4:{
+            PageTitle:'Documents',
+            Url:'https://scgchemicals.scg.com/lotusnotes/ROC_Store/SitePages/index.aspx?Page=Documents',
+            ElemMenu:'.NavDocuments',
+        },
+        5:{
+            PageTitle:'App Settings',
+            Url:'https://scgchemicals.scg.com/lotusnotes/ROC_Store/SitePages/index.aspx?Page=AppSettings',
+            ElemMenu:'.NavAppSettings',
+        },
+    };
+
+
+    $(document).ready(function(){
+       for(i in Navigation){
+        var CurrentPageTitle = $('#PageTitle').text();
+
+        $(Navigation[i].ElemMenu).attr('onclick','window.location.assign(\''+Navigation[i].Url+'\');');
+
+        if(Navigation[i].PageTitle == CurrentPageTitle){
+            $(Navigation[i].ElemMenu).removeClass('left-tab-menu');
+            $(Navigation[i].ElemMenu).addClass('left-tab-menu-active');
+            $(Navigation[i].ElemMenu + ' p').removeClass('left-title');
+            $(Navigation[i].ElemMenu + ' p').addClass('left-title-active');
+
+        }
+
+       }
+        
+
+       // View in left pane menu
+
+        var requestUri = SiteUrl + "/_api/web/lists/getByTitle('Log_Access')";
+        var requestHeaders = {
+        "accept": "application/json;odata=verbose"
+        }
+    
+        $.ajax({
+            url: requestUri,
+            type: 'GET',
+            dataType: 'json',
+            async: false,
+            headers: requestHeaders,
+            success: function (data) 
+            {      
+              
+        
+                $('#PageView').text('View: '+ data.d.ItemCount);
+                
+            },
+            error: function ajaxError(response) {
+                console.log(response.status + ' ' + response.statusText);
+            }
+        });
+       
+       
+    });
+
+</script>

@@ -1,0 +1,252 @@
+﻿.ms-core-sideNavBox-removeLeftMargin{
+  display:none;
+  }
+  
+#contentBox{
+
+	  margin-left:0px !important;
+	  margin-right:0px !important;
+    width:100%;
+   /*padding-left:50px;
+    padding-right:50px;*/
+}
+.ms-breadcrumb-top{
+
+  display:none;
+}
+
+#WPQ2_ListTitleViewSelectorMenu_Container{
+  
+  display:none;
+
+}
+.ms-webpartzone-cell{
+  margin-bottom:0px;
+  
+}
+#DeltaPlaceHolderSearchArea{
+
+  display:none;
+}
+
+#DeltaPlaceHolderPageTitleInTitleArea{
+  background-color: #f09609;
+  color:white;
+  font-weight:bold;
+  padding-left:15px;
+  padding-right:15px;
+  border-radius:10px;
+
+}
+#DeltaPlaceHolderPageTitleInTitleArea span span a{
+  background-color:#f09609;
+  color:white;
+  font-weight:bold;
+  padding-left:15px;
+  padding-right:15px;
+  border-radius:10px;
+
+}
+.ms-verticalAlignTop{
+  vertical-align:middle;
+}
+
+.shadow{
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.border-shadow{
+  box-shadow: 3px 2px 71px -4px rgba(0,0,0,0.74);
+}
+
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #f09609;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+li{
+  list-style-type: none;
+}
+
+/* loading attachfile*/
+.lds-ring {
+  display: inline-block;
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  margin: 6px;
+  border: 6px solid #cbced3;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #cbced3 transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+    /* Prevent Popup auto render in top page */
+    .note-popover ,popover, in ,note-image-popover, bottom{
+
+      display:none;
+  }
+
+  .tag-person{
+      padding-left:0px; 
+      padding-top:10px; 
+      padding-bottom:10px;
+  }
+
+  .tag-person li{
+      background-color:#f09609; 
+      border-radius:5px; 
+      padding-left:15px; 
+      
+      padding-top:0px; 
+      padding-bottom:0px; 
+      color:white; 
+      margin-right:15px;
+      margin-bottom:10px;
+  }
+  .tag-person li div a{
+      margin-left:10px; 
+      font-weight:bold; 
+      padding:5px; 
+      padding-left:5px; 
+      padding-right:5px; 
+      background-color:white; 
+      color:#f09609 !important;
+  }
+
+
+  .tag-file{
+      padding-left:0px; 
+      padding-top:10px; 
+      padding-bottom:10px;
+  }
+
+  .tag-file li{
+      background-color:#f09609; 
+      border-radius:5px; 
+      padding-left:15px; 
+      
+      padding-top:0px; 
+      padding-bottom:0px; 
+      color:white; 
+      margin-right:15px;
+      margin-bottom:10px;
+  }
+  .tag-file li div a p{
+      color:white;
+      
+  }
+  .tag-file li div a{
+     
+      text-decoration: none;
+  }
+  .del-file{
+
+      margin-left:10px; 
+      font-weight:bold; 
+      padding:5px; 
+      padding-left:5px; 
+      padding-right:5px; 
+      background-color:white; 
+      color:#f09609 !important;
+  }
+
+
+
+  #peoplePickerDiv2_TopSpan{
+
+      width:235px !important;
+  }
+
+  #contentBox{
+
+    min-width:0px !important;
+    padding-left:0px !important;
+    padding-right:0px !important;
+}
+.ms-wikicontent{
+
+    padding-right:0px !important;
+}
+.lgs-support{
+
+    margin-right:10px;
+    background-color:white;
+    border-radius: 3px;
+    padding-left:15px; 
+    padding-right:15px;
+    padding-top:2px;
+    padding-bottom:2px;
+    color:#ff6600;
+    margin-bottom:10px;
+    border-color: #ff6600;
+    border-width:1px;
+    border-style:solid;
+
+}
+
+#PageBody{
+  background-color:white; 
+  padding-top:20px; 
+  padding-bottom:50px;
+}
+
+.attachfile {
+  width: auto;
+  margin-right: 10px;
+  background-color: white;
+  border-radius: 3px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  color: #ff6600;
+  margin-bottom: 5px;
+  border-color: #ff6600;
+  border-width: 1px;
+  border-style: solid;
+}
+
+.body-zone{
+  padding-left:30px;
+}
+

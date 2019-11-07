@@ -1,0 +1,73 @@
+
+<div class="container">
+
+
+    <div id="component"></div>
+</div>
+    
+        
+<script type="text/javascript">
+
+    // Set inittial form  
+    // such as option in select , default date, default current user , default text and label
+    function SetInitialForm(){
+        
+
+        
+    }       
+
+    // Form display when user click new form .
+    // what you do want to display or change element new form.
+    // input action to this function
+    function FormNew(){
+        RenderFormNew();
+        
+        
+    }
+
+    // Form display when user click view an item.
+    // if user click new item this function will not be called.
+    function FormView(){
+        var query = '';
+        var data = GetData(query);
+                    Queryfile();
+                    RenderView(data);
+    }
+
+    // Create View or switch view according to config.js
+    function SwitchViewTo(view,data){
+
+        switch(view){
+            
+            case 'Closed':
+                                break;
+            case 'Cancelled':
+                                break;
+            case 'Complete':
+                                break;
+
+        }
+
+    }
+    // End Create View or switch view according to config.js
+
+
+    function Queryfile(){
+        var query = '?$select=*&$expand=File&$top=100&$filter=FormID eq \''+FormID+'\'&$orderby=Created desc';
+        var data = GetItemByRestAPI(Attachment,query);
+        if(data){
+
+            $('#AttachZone').empty();
+            var str = '';
+
+            for(i=0;i<data.length;i++){
+                str+='<a href="'+SiteUrl+'/Attachment/'+data[i].File.Name+'" download="'+data[i].Title+'"><li style="cursor:pointer;" class="attachfile">'+data[i].Title+'<br><p style="margin-bottom:0px; text-align:center;">'+ConvertDate(data[i].TimeStamp)+'</p></li></a>';
+            }
+
+            $('#AttachZone').append(str);
+
+        }
+    } 
+</script>
+        
+        

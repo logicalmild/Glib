@@ -1,0 +1,160 @@
+<style>
+
+    #TData *{
+        color:gray;
+    }
+    label{
+        color:white;
+    }
+    #TData_filter label input{
+        background-color:rgba(0,0,0,0.2);
+    }
+    .paginate_button ,#TData_info,#TData_paginate *{
+        color:white !important;
+    }
+    .paginate_button .current{
+        color:black !important;
+    }
+    .btnz:link,
+    .btnz:visited{
+      text-decoration: none;
+      text-transform:uppercase;
+      position:relative;
+      top:0;
+      left:0;
+      padding:10px 40px;
+      border-radius:100px;
+      display:inline-block;
+      transition: all .5s;
+      /* color:rgba(20, 45, 55, 0.69); */
+      font-weight:bold;
+    }
+    
+    .btnz-white{
+      background:#fff;
+      color:#000;
+    }
+    
+    .btnz:hover{
+       box-shadow:0px 10px 10px rgba(0,0,0,0.2);
+       transform : translateY(-3px);
+    }
+    
+    .btnz:active{
+      box-shadow:0px 5px 10px rgba(0,0,0,0.2);
+      transform:translateY(-1px);
+    }
+    
+    .btnz-bottom-animation-1{
+      animation:comeFromBottom 1s ease-out .8s;
+    }
+    
+    .btnz::after{
+      content:"";
+      text-decoration: none;
+      text-transform:uppercase;
+      position:absolute;
+      width:100%;
+      height:100%;
+      top:0;
+      left:0;
+      border-radius:100px;
+      display:inline-block;
+      z-index:-1;
+      transition: all .5s;
+    }
+    
+    .btnz-white::after {
+        background: #fff;
+    }
+    
+    .btnz-animation-1:hover::after {
+        transform: scaleX(1.4) scaleY(1.6);
+        opacity: 0;
+    }
+    
+    @keyframes comeFromBottom{
+      0%{
+        opacity:0;
+        transform:translateY(40px);
+      } 
+      100%{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    th{
+        text-align:center;
+    }
+    </style>
+
+
+<h1 id="PageTitle" style="color:white; margin-bottom:25px;">Data Chemicals</h1>
+    <div id="Dashboard" style="display:none;">
+        <div class="form-inline" style="border-bottom:2px solid white; padding-bottom:15px;">
+            <a href="https://scgchemicals.scg.com/lotusnotes/ROC_Store/SitePages/index.aspx?Page=FormDataChemicals&FormMaster=0" style="margin-right:20px;" class="btnz btnz-white btnz-animation-1">Create</a> 
+     
+                <button type="button" class="btn btn-lg btn-primary">All Items</button>
+         
+       
+                <button type="button" class="btn btn-lg btn-primary">By Requestor</button>
+  
+  
+                <button type="button" class="btn btn-lg btn-primary">By Created</button>
+       
+          
+                <button type="button" class="btn btn-lg btn-primary">By Status</button>
+        </div><br>
+        <div class="col-md-12">
+            <table id="TData" class="display ViewAllItem" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>View</th>
+                        <th>RunningNO</th>
+                        <th>Title</th>
+                        <th>FormStatus</th>
+                        <th>Create Date</th>
+                        <th>Create By</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+      
+    <script type="text/javascript">
+   
+        
+    
+        $(document).ready(function(){
+            var TData = $('#TData').DataTable();
+            
+            var query  = '?$select=*,Author/Title,Author/Id&$expand=Author&$top=5000&$orderby=Created desc';
+            var data = GetItemByRestAPI('Data Chemicals',query);
+            if(data){   
+                for(i=0;i<data.length;i++){
+                    TData.row.add([
+                        '<div style="color:black; font-weight:bold; text-align:center; cursor:pointer;">'+data[i].View+'</div>',
+                        '<div style="color:black; font-weight:bold; text-align:center;">'+data[i].RunningNO+'</div>',
+                        '<div style="color:black; font-weight:bold; text-align:center;">'+data[i].Title+'</div>',
+                        '<div style="color:black; font-weight:bold; text-align:center;">'+data[i].FormStatus+'</div>',
+                        '<div style="color:black; font-weight:bold; text-align:center;">'+ConvertDate(data[i].Created)+'</div>',
+                        '<div style="color:black; font-weight:bold; text-align:center;">'+data[i].Author.Title+'</div>',
+
+                        
+                ]).draw(false);
+                }
+                
+            }
+
+            
+            $('#Dashboard').fadeIn(1000);
+        });
+        
+       
+    
+      
+      </script>
