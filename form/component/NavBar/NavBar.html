@@ -119,21 +119,28 @@
    <script type="text/javascript">
    
        var TopMenuStr = '';
-       var CloseFormBtn = '<button id="CloseFormStyle" onclick="CloseForm(\'0\');" type="button" class="btn btn btn-danger btn-lg"><i class="fa fa-close"></i> Exit</button>';
-       var RefreshBtn = '<button id="RefreshForm" onclick="RefreshPage();" type="button" class="btn btn btn-warnning btn-lg" style="margin-left:15px;"><i class="fa fa-refresh"></i> Refresh</button>';
-       var SaveDraftBtn = '<button onclick="SaveDraft();" type="button" class="btn btn btn-primary btn-lg" style="margin-left:15px;"><i class="fa fa-floppy-o"></i> Save Draft</button>';
-       var AttachfileBtn = '<button onclick="Attachfile();" type="button" class="btn btn btn-primary btn-lg" style="background-color:#1BA1E2; border-color:#1BA1E2; margin-left:15px;"><i class="fa fa-paperclip" style="margin-right:5px;"></i>Attachfile</button>';
+       var CloseFormBtn = '<button id="CloseFormStyle" onclick="CloseForm(\'0\');" type="button" class="btn btn btn-danger btn-md"><i class="fa fa-close"></i> Exit</button>';
+       var RefreshBtn = '<button id="RefreshForm" onclick="Form.Refresh();" type="button" class="btn btn btn-warnning btn-md" style="margin-left:15px;"><i class="fa fa-refresh"></i> Refresh</button>';
+       var SaveDraftBtn = '<button onclick="SaveDraft();" type="button" class="btn btn btn-primary btn-md" style="margin-left:15px;"><i class="fa fa-floppy-o"></i> Save Draft</button>';
+       var AttachfileBtn = '<button onclick="Attachfile();" type="button" class="btn btn btn-primary btn-md" style="background-color:#1BA1E2; border-color:#1BA1E2; margin-left:15px;"><i class="fa fa-paperclip" style="margin-right:5px;"></i>Attachfile</button>';
        
-       var TempFormID = GetParameterByName('FormID');
-       if(TempFormID){    
-               var GetFormStatus = '?$select=FormStatus&$filter=FormID eq \''+FormID+'\'';
-               var TrigForGetFormStatus = GetData(GetFormStatus);
+    //    var TempFormID = GetParameterByName('FormID');
+    //    if(TempFormID){    
+    //            var GetFormStatus = '?$select=FormStatus&$filter=FormID eq \''+Form.FormID+'\'';
+    //            var TrigForGetFormStatus = GetData(GetFormStatus);
                
-       }else{
-               Form.FormStatus = 'Create';
+    //    }else{
+    //            Form.FormStatus = 'Create';
+    //    }
+
+       var FormStep = FormMaster[Form.FormMaster].FormStep;
+       var TopMenu;
+       for(i in FormStep){
+            if(FormStep[i].FormStatus == Form.FormStatus){
+                TopMenu =  FormMaster[Form.FormMaster].FormStep[i].Nav.TopNav;
+            }
        }
-       var TopMenu =  FormMaster[MasterFormID].FormStep[Form.FormStatus].Nav.TopNav;
-       
+
        if(TopMenu.CloseForm){
            TopMenuStr += CloseFormBtn;
        }

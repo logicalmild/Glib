@@ -2,10 +2,10 @@
 </div>
 
 <div id="RightElemBottom" style="position:fixed; right:5%; bottom:10%; width:13px;">
-    <a onclick="GoToTop();" data-toggle="tooltip" title="Go to top page" type="button" class="btn btn btn-primary btn-lg" style="background-color:#4287f5; border-color:#4287f5; color:white; font-weight:bold;" ><i style="font-weight:bold;" class="fa fa-angle-double-up"></i></a>
+    <a onclick="GoToTop();" data-toggle="tooltip" title="Go to top page" type="button" class="btn btn btn-primary btn-md" style="background-color:#4287f5; border-color:#4287f5; color:white; font-weight:bold;" ><i style="font-weight:bold;" class="fa fa-angle-double-up"></i></a>
 </div>
 <div id="RightElemTop" style="position:fixed; right:5%; bottom:3%; width:13px;">
-    <a onclick="GoToBottom();" data-toggle="tooltip" title="Go to bottom page" type="button" class="btn btn btn-primary btn-lg" style="background-color:#4287f5; border-color:#4287f5; color:white; font-weight:bold;" ><i style="font-weight:bold;" class="fa fa-angle-double-down"></i></a>
+    <a onclick="GoToBottom();" data-toggle="tooltip" title="Go to bottom page" type="button" class="btn btn btn-primary btn-md" style="background-color:#4287f5; border-color:#4287f5; color:white; font-weight:bold;" ><i style="font-weight:bold;" class="fa fa-angle-double-down"></i></a>
 </div>
 
 <script type="text/javascript">
@@ -13,24 +13,20 @@
 
 
         var RightNavStr = '';
-        var CloseBtn = '<a id="CloseForm2" onclick="CloseForm(\'0\');" data-toggle="tooltip" title="Close Form" type="button" class="btn btn btn-primary btn-lg" style="background-color:#dc3545; border-color:#ff6600; color:white; font-weight:bold;"><i class="fa fa-remove"></i></a>';
-        var AttachFileBtn = '<a onclick="Attachfile();" data-toggle="tooltip" title="Attachfile" type="button" class="btn btn btn-primary btn-lg" style="background-color:#1BA1E2; border-color:#1BA1E2; color:white; font-weight:bold;"><i class="fa fa-paperclip"></i></a>';
-        var SaveDraftBtn = '<a onclick="SaveDraft();" id="btnSaveDraft" data-toggle="tooltip" title="Save Draft" type="button" class="btn btn btn-primary btn-lg" style="backgrond-color:#007bff; color:white; font-weight:bold; padding-left:9.5px; padding-right:9.5px;"><i class="fa fa-floppy-o"></i></a>';
-        var RemoveItemBtn = '<a id="RemoveCurrentForm" onclick="RemoveCurrentForm();" data-toggle="tooltip" title="Remove this form" type="button" class="btn btn btn-primary btn-lg" style="background-color:rgb(138, 28, 28); border-color:rgb(138, 28, 28); color:white; font-weight:bold;" ><i class="fa fa-trash-o"></i></a>';
-        var RefreshBtn = '<a onclick="RefreshPage();" data-toggle="tooltip" title="Refresh page" type="button" class="btn btn btn-primary btn-lg" style="background-color:#fcba03; border-color:#fcba03; color:white; font-weight:bold;" ><i class="fa fa-refresh"></i></a>';
+        var CloseBtn = '<a id="CloseForm2" onclick="CloseForm(\'0\');" data-toggle="tooltip" title="Close Form" type="button" class="btn btn btn-primary btn-md" style="background-color:#dc3545; border-color:#ff6600; color:white; font-weight:bold;"><i class="fa fa-remove"></i></a>';
+        var AttachFileBtn = '<a onclick="Attachfile();" data-toggle="tooltip" title="Attachfile" type="button" class="btn btn btn-primary btn-md" style="background-color:#1BA1E2; border-color:#1BA1E2; color:white; font-weight:bold;"><i class="fa fa-paperclip"></i></a>';
+        var SaveDraftBtn = '<a onclick="SaveDraft();" id="btnSaveDraft" data-toggle="tooltip" title="Save Draft" type="button" class="btn btn btn-primary btn-md" style="backgrond-color:#007bff; color:white; font-weight:bold; padding-left:9.5px; padding-right:9.5px;"><i class="fa fa-floppy-o"></i></a>';
+        var RemoveItemBtn = '<a id="RemoveCurrentForm" onclick="RemoveCurrentForm();" data-toggle="tooltip" title="Remove this form" type="button" class="btn btn btn-primary btn-md" style="background-color:rgb(138, 28, 28); border-color:rgb(138, 28, 28); color:white; font-weight:bold;" ><i class="fa fa-trash-o"></i></a>';
+        var RefreshBtn = '<a onclick="RefreshPage();" data-toggle="tooltip" title="Refresh page" type="button" class="btn btn btn-primary btn-md" style="background-color:#fcba03; border-color:#fcba03; color:white; font-weight:bold;" ><i class="fa fa-refresh"></i></a>';
 
-   
-        // var RightMenu =  FormMaster[MasterFormID].Nav.RightNav;
-        var TempFormID = GetParameterByName('FormID');
-        if(TempFormID){    
-            var GetFormStatus = '?$select=FormStatus&$filter=FormID eq \''+FormID+'\'';
-            var TrigForGetFormStatus = GetData(GetFormStatus);
-            
-        }else{
-            Form.FormStatus = 'Create';
+
+        var FormStep = FormMaster[Form.FormMaster].FormStep;
+        var RightMenu;
+        for(i in FormStep){
+            if(FormStep[i].FormStatus == Form.FormStatus){
+                RightMenu =  FormMaster[Form.FormMaster].FormStep[i].Nav.RightNav;
+            }
         }
-        
-        var RightMenu =  FormMaster[MasterFormID].FormStep[Form.FormStatus].Nav.RightNav;
         
             if(RightMenu.CloseForm){
                 RightNavStr += CloseBtn;
