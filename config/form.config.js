@@ -13,7 +13,7 @@ FormMaster[0] = {
 
     },
     LinkUrl:{
-        AfterCloseForm: SiteUrl+'/SitePages/index.aspx?Page=DataChemicals',
+        AfterCloseForm: SiteUrl,
     },
     RunningNO:{
         Enable:true,

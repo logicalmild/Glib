@@ -1,5 +1,5 @@
 <style>
-    #RefreshForm{
+    #NavBarRefresh{
    
        transition-duration: 0.4s;
        color: white;
@@ -7,7 +7,7 @@
        border-color:#8cbf26;
    
    }
-    #RefreshForm:hover {
+    #NavBarRefresh:hover {
      background-color: white; /* Green */
      color: #8cbf26;
    }
@@ -119,10 +119,10 @@
    <script type="text/javascript">
    
        var TopMenuStr = '';
-       var CloseFormBtn = '<button id="CloseFormStyle" onclick="CloseForm(\'0\');" type="button" class="btn btn btn-danger btn-md"><i class="fa fa-close"></i> Exit</button>';
-       var RefreshBtn = '<button id="RefreshForm" onclick="Form.Refresh();" type="button" class="btn btn btn-warnning btn-md" style="margin-left:15px;"><i class="fa fa-refresh"></i> Refresh</button>';
-       var SaveDraftBtn = '<button onclick="SaveDraft();" type="button" class="btn btn btn-primary btn-md" style="margin-left:15px;"><i class="fa fa-floppy-o"></i> Save Draft</button>';
-       var AttachfileBtn = '<button onclick="Attachfile();" type="button" class="btn btn btn-primary btn-md" style="background-color:#1BA1E2; border-color:#1BA1E2; margin-left:15px;"><i class="fa fa-paperclip" style="margin-right:5px;"></i>Attachfile</button>';
+       var CloseFormBtn = '<button id="NavBarClose" type="button" class="btn btn btn-danger btn-md"><i class="fa fa-close"></i> Exit</button>';
+       var RefreshBtn = '<button id="NavBarRefresh" type="button" class="btn btn btn-warnning btn-md" style="margin-left:15px;"><i class="fa fa-refresh"></i> Refresh</button>';
+       var SaveDraftBtn = '<button id="NavBarSave" type="button" class="btn btn btn-primary btn-md" style="margin-left:15px;"><i class="fa fa-floppy-o"></i> Save Draft</button>';
+       var AttachfileBtn = '<button id="NavBarAttachment" type="button" class="btn btn btn-primary btn-md" style="background-color:#1BA1E2; border-color:#1BA1E2; margin-left:15px;"><i class="fa fa-paperclip" style="margin-right:5px;"></i>Attachfile</button>';
        
     //    var TempFormID = GetParameterByName('FormID');
     //    if(TempFormID){    

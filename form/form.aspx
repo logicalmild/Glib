@@ -12,13 +12,16 @@
 <meta http-equiv="X-UA-Compatible" content="IE=10; IE=9; IE=8; IE=7" />
 
 <!-- <script src="/_layouts/1033/init.js"></script> -->
-<!-- <script type="text/javascript" src="./web/js/MicrosoftAjax.js"></script> -->
+<script type="text/javascript" src="js/MicrosoftAjax.js"></script>
 <!-- <script src="/_layouts/sp.core.js"></script> -->
-<!-- <script type="text/javascript" src="/_layouts/15/sp.runtime.js"></script>
-<script type="text/javascript" src="/_layouts/15/sp.js"></script> -->
 
 
-<!--<script type="text/javascript" src="/_layouts/15/sp.core.js"></script>-->
+
+
+
+<script type="text/javascript" src="/_layouts/15/sp.js"></script>
+<script type="text/javascript" src="/_layouts/15/sp.runtime.js"></script>
+<!-- <script type="text/javascript" src="/_layouts/15/sp.core.js"></script> -->
 <!-- <script type="text/javascript" src="/_layouts/15/clienttemplates.js"></script>
 <script type="text/javascript" src="/_layouts/15/clientforms.js"></script>
 <script type="text/javascript" src="/_layouts/15/clientpeoplepicker.js"></script>
@@ -26,7 +29,7 @@
 <script type="text/javascript" src="/_layouts/15/1033/sts_strings.js"></script> -->
 
 <!-- SharePoint -->
-<!-- <script src="js/PeoplePickerData.js"></script> -->
+<script src="js/PeoplePickerData.js"></script>
 
 <!-- Library -->
 <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
@@ -49,6 +52,7 @@
 
 <!-- Local -->
 <link rel="stylesheet" href="css/form.css">
+<script src="js/workflow.js"></script>
 <script src="js/Form2.js"></script>
 <script src="js/attachment.js"></script>
 <script src="js/main-form.js"></script>

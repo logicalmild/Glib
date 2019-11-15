@@ -8,7 +8,13 @@ function initializePeoplePicker(peoplePickerElementId, Users) {
             schema['AllowMultipleValues'] = false;
             schema['MaximumEntitySuggestions'] = 50;
             schema['Width'] = '280px';
-            this.SPClientPeoplePicker_InitStandaloneControlWrapper(peoplePickerElementId, Users, schema);
+    
+          
+            this.SPClientPeoplePicker_InitStandaloneControlWrapper(peoplePickerElementId, Users, schema);     
+        
+            // this.SPClientPeoplePicker_InitStandaloneControlWrapper(peoplePickerElementId, Users, schema);     
+          
+            
         }
 
         function registerPPOnChangeEvent(ppElement) {

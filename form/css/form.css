@@ -56,7 +56,8 @@
 }
 
 .border-shadow{
-  box-shadow: 3px 2px 71px -4px rgba(0,0,0,0.74);
+  /* box-shadow: 3px 2px 71px -4px rgba(0,0,0,0.74); */
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .loader {
@@ -228,6 +229,9 @@ li{
   background-color:white; 
   padding-top:20px; 
   padding-bottom:50px;
+  border-radius:5px;
+  margin-top:50px;
+  margin-bottom:100px;
 }
 
 .attachfile {
@@ -250,3 +254,11 @@ li{
   padding-left:30px;
 }
 
+body{
+
+  background: #74ebd5;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #ACB6E5, #74ebd5);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #ACB6E5, #74ebd5); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+  padding-bottom:200px;
+}

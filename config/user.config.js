@@ -1,5 +1,5 @@
-var GroupAdminID = 2649; // group admin
-var GroupMember = 2650; 
+var GroupAdmin = 2839; // group admin
+var GroupMember = 2840; 
 
 // CurrentUser object variable /////////////////////////////////////////////////
 var CurrentUser = {
