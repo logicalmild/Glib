@@ -101,7 +101,7 @@ var Form = {
                 Form.FormStatus = 'Create';
             }
         }else{
-            Form.RoutingPage('PageMapError.html');
+            Form.Routing.Page('PageMapError.html');
             
         }
     },
@@ -141,7 +141,63 @@ var Form = {
 
             $('[data-toggle="tooltip"]').tooltip(); 
         },
-            
+        Button:function(){
+            var Button = {
+                1:{
+                    id:'#NavBarRefresh',
+                    title:'Refresh',
+                    onclick:'Form.Refresh();',
+                },
+                2:{
+                    id:'#NavBarClose',
+                    title:'Refresh',
+                    onclick:'Form.Control.Button.CloseForm();',
+                    
+                },
+                3:{
+                    id:'#NavBarSave',
+                    title:'Refresh',
+                    onclick:'Form.SaveDraft();',
+                },
+                4:{
+                    id:'#NavBarAttachment',
+                    title:'Refresh',
+                    onclick:'Form.Attachment();',
+                },
+                5:{
+                    id:'#RightNavGoToTop',
+                    title:'Go to top',
+                    onclick:'Form.Control.Button.GoToTop();',
+                },
+                6:{
+                    id:'#RightNavGoToBottom',
+                    title:'Go to bottom',
+                    onclick:'Form.Control.Button.GoToBottom();',
+                },
+                7:{
+                    id:'#RightNavRefresh',
+                    title:'Refresh',
+                    onclick:'Form.Refresh();',
+                },
+                8:{
+                    id:'#RightNavClose',
+                    title:'Refresh',
+                    onclick:'Form.Control.Button.CloseForm();',
+                },
+                9:{
+                    id:'#SubmitAction',
+                    title:'Submit',
+                    onclick:'Form.FormSubmit.Submit();',
+                    
+                },
+
+            };
+    
+            for(i in Button){
+                $(Button[i].id).attr('onclick',Button[i].onclick);
+            }
+        },
+        
           
     },
     Refresh:function(){
@@ -168,33 +224,36 @@ var Form = {
         window.location.href = Form.LinkUrl.AfterCloseForm;
        
     },
-    Routing:function(){
-        if(Form.FormID){
+    Routing:{
 
-            Form.View = 'View';
+        View:function(){
+            if(Form.FormID){
 
-        }else{
-        
-            Form.View = 'Create';
-            Form.FormStatus = 'Create';
-            Form.FormID = generateUID();
-        }
-    },
-    RoutingPage:function(Page){
-        
-        $('#PageBody').empty();
-        var response;
-            $.ajax({ type: "GET",   
-                url: SiteUrl + "/SitePages/web/form/component/Page/" + Page,   
-                async: false,
-                success : function(text)
-                {
-                    response= text;
-                }
-            });
-        
-        $('#PageBody').append(response);
-        $('.loader').remove();
+                Form.View = 'View';
+    
+            }else{
+            
+                Form.View = 'Create';
+                Form.FormStatus = 'Create';
+                Form.FormID = generateUID();
+            }
+        },
+        Page:function(Page){
+            $('#PageBody').empty();
+            var response;
+                $.ajax({ type: "GET",   
+                    url: SiteUrl + "/SitePages/web/form/component/Page/" + Page,   
+                    async: false,
+                    success : function(text)
+                    {
+                        response= text;
+                    }
+                });
+            
+            $('#PageBody').append(response);
+            $('.loader').remove();
+        },
+
     },
     Render:{
         Template:function(){
@@ -276,7 +335,7 @@ var Form = {
                 {
                     response= text;
                     $('#HistoryLog').append(response);
-                    Form.HistoryLog('get'); 
+                    Form.Log.HistoryLog('get'); 
                 }
             });
         },
@@ -307,14 +366,99 @@ var Form = {
                 }
             }
         },
+
     },
-    Add:{
-        ToGroupMember:function(){
+    User:{
+        GetCurrent:function(GroupID){
+            var userid = _spPageContextInfo.userId;
+            var requestUri = _spPageContextInfo.webAbsoluteUrl + "/_api/web/getuserbyid(" + userid + ")";
+            var requestHeaders = { "accept" : "application/json;odata=verbose" };
+            $.ajax({
+                url : requestUri,
+                contentType : "application/json;odata=verbose",
+                headers : requestHeaders,
+                async:false,
+                success : function(data){
+                    data = data.d;
+                    CurrentUser.ID = data.Id;
+                    CurrentUser.Name = data.Title;
+                    CurrentUser.Email = data.Email;
+                    CurrentUser.LoginName = data.LoginName;
+                },
+                error : function(err){
+                    alert("error");
+                }
+            });
+        },
+        AddToGroupMember:function(){
             var InGroupMember = CheckUserInGroupID(GroupMember);  
             if(InGroupMember == false){
                 
                 AddCurrentUserToGroup(GroupMember);
             }
+        },
+        CheckMemberGroup:function(){
+            var clientContext = new SP.ClientContext(SiteUrl);
+            var collGroup = clientContext.get_web().get_siteGroups();
+            var oGroup = collGroup.getById(GroupID);
+            this.collUser = oGroup.get_users();
+            clientContext.load(collUser);
+        
+        
+            clientContext.executeQueryAsync(function(){
+        
+                var userInfo = '';
+                var userEnumerator = collUser.getEnumerator();
+                var CountUser = collUser.get_count();
+            
+                var TempUserIDArr = [];
+                while (userEnumerator.moveNext()) {
+                    var oUser = userEnumerator.get_current();
+                    userInfo += '\nUser: ' + oUser.get_title() + 
+                        '\nID: ' + oUser.get_id() + 
+                        '\nEmail: ' + oUser.get_email() + 
+                        '\nLogin Name: ' + oUser.get_loginName();
+                        
+                        TempUserIDArr.push(oUser.get_id());
+        
+                }
+        
+                if(TempUserIDArr.indexOf(CurrentUser.ID) == -1){
+                    AddCurrentUserToGroup(GroupMember);
+                }else{
+                   // alert('User is in group');
+                }
+        
+            
+        
+            }, function(){
+        
+        
+                alert('Request failed. ' + args.get_message() + '\n' + args.get_stackTrace());
+        
+            });
+        },
+        CurrentRole:function(Role,TitleRole){
+            if(TitleRole == 'Visitor'){
+        
+                Disable_Panel('All');
+                $('#Permission').text('Visitor');
+                //hide button remove right nav
+                $('#RemoveCurrentForm , #btnSaveDraft').hide();
+                
+            }
+            else{
+        
+                $('#Permission').text(TitleRole);
+            }
+        },
+    },
+    Add:{
+        Loading:function(){
+            $('#ModalBody').empty();
+            $('#TitleModal').text('Loading...');
+            var loading ='<center><div class="loader" style="margin-top:15%; margin-bottom:15%;"></div></center>';
+            $('#ModalBody').append(loading);
         },
     },
     Set:{
@@ -337,6 +481,52 @@ var Form = {
                             
                     } 
                 } 
+            }
+        },
+        RequireFieldByAction:function(ActionID,FieldID,TypeDom,Title,Condition){
+            var data = $('#' + ActionID).val();
+            if(data){
+                if(data == Condition){
+                    var FormIndex = GetParameterByName('FormMaster');
+                    var FormConfig = FormMaster[FormIndex];
+                    var Setting = FormConfig['FormStep'];
+                    for(var i in Setting){
+                 
+                        if(Setting[i].FormStatus == Form.FormStatus){
+                           var ObjField = Setting[i].Validate;
+                                Objlength = Object.keys(ObjField).length;
+                                ObjField['field' + (Objlength + 1)] = {
+                                    Title:Title,
+                                    ID:FieldID,
+                                    Type:TypeDom
+                                };      
+                        }
+                    }    
+                    Form.Set.RequireField();
+                }else{
+        
+                    var FormIndex = GetParameterByName('FormMaster');
+                    var FormConfig = FormMaster[FormIndex];
+                    var Setting = FormConfig['FormStep'];
+                    for(var i in Setting){
+                 
+                        if(Setting[i].FormStatus == Form.FormStatus){
+                            var ObjField = Setting[i].Validate;
+                            for(var j in Setting[i].Validate){
+                                var FieldValidate = Setting[i].Validate[j];
+        
+                                if(FieldValidate.ID == FieldID){
+                                    
+                                    delete ObjField[j];
+                                    
+                                }
+                            }
+                        }
+                    }    
+        
+        
+                    SetRequireField();
+                }
             }
         },
         InputData:function(){
@@ -700,6 +890,101 @@ var Form = {
                 oListItem.set_item(Column,Value);      
             }
         },
+        SubmitOption:function(){
+            debugger;
+
+            for(var i in Form.FormStep){
+
+                if(Form.FormStep[i].FormStatus ==  Form.FormStatus){
+                    for(j in Form.FormStep[i].StatusAction){
+                        var str='<option value="0">Please select...</option>';
+                        var StatusAction = Form.FormStep[i].StatusAction;
+                        for(var k in StatusAction){
+                        
+                            str+='<option value="'+k+'">'+StatusAction[k]+'</option>';
+
+                        }
+                        $('#Approval_Select').empty();
+                        $('#Approval_Select').append(str);
+                    }
+                }
+            }
+        },
+        DisablePanel:function(PartID){
+            if(PartID == 'All'){
+
+                $('#Permission').text('Visitor');
+                $('body *').attr('readonly', true);
+                $('body *').css('cursor', 'no-drop');
+                $('body *').on('mousedown', function(e) {
+                        e.preventDefault();
+                        this.blur();
+                        window.focus();
+                });
+                $('body').removeAttr('onclick');
+                $('#Approval').hide();
+        
+            }else{
+                
+                $('#'+PartID+' *').attr('readonly', true);
+                $('#'+PartID+' *').css('cursor', 'no-drop');
+                $('#'+PartID+' *').on('mousedown', function(e) {
+                        e.preventDefault();
+                        this.blur();
+                        window.focus();
+                });
+                $('#'+PartID+' *').removeAttr('onclick');
+        
+            }  
+        },
+        DropdownMaster:function(ConnectionID,DomID,TypeDom){
+            switch(TypeDom){
+                case 'select':
+                    var data = DataConnection(ConnectionID);
+                    var str='';
+                    if(data){
+
+                        var value = data[0].Value;
+                        value = value.split(',');
+                        if(value){
+                            str+='<option value="-">Please Select...</option>';
+                            for(i=0;i<value.length;i++){
+                                str+='<option value="'+value[i]+'">'+value[i]+'</option>';
+                            } 
+                            $('#' + DomID).empty();
+                            $('#' + DomID).append(str);  
+                        }
+                        
+                    }
+                    break;
+            }
+        },
+        SetPropertiesForm:function(oListItem,Status){
+            switch(Status){
+                case 'Create':
+                                var index = GetParameterByName('FormMaster');
+                                // var LinkForm = SiteUrl + '/SitePages/'+FormMaster[index].FormName+'.aspx?FormMaster='+ index +'&FormID=' + FormID;
+                                var LinkForm = SiteUrl + '/SitePages/index.aspx?Page='+FormMaster[index].FormName+'&FormMaster='+ index +'&FormID=' + FormID;
+                                var TagLink = '<a target="_blank" href="'+LinkForm+'">View</a>';
+        
+                                oListItem.set_item('View',TagLink);
+                                oListItem.set_item('FormID',FormID);
+                                oListItem.set_item('RunningNO',GenDocNo('DocNo'));
+                                oListItem.set_item('Year',GenDocNo('Year'));
+                                oListItem.set_item('Month',GenDocNo('Month'));
+                                
+                                
+                                break;
+                case 'Update': 
+                                
+                                break;
+        
+        
+            }
+            oListItem.set_item('StatusAction',Form.StatusAction);
+            oListItem.set_item('FormStatus',Form.FormStatus);
+            oListItem.set_item('FlagSubmit',Form.FlagSubmit);
+        },
     },
     Get:{
         ConfigData:function(){
@@ -718,7 +1003,7 @@ var Form = {
                 Form.Workflow = FormMaster[Form.FormMaster].Workflow;
                 Form.FormStep = FormMaster[Form.FormMaster].FormStep;
             }else{
-                Form.RoutingPage('PageNotFound.html'); // FormMethodTemplate
+                Form.Routing.Page('PageNotFound.html'); // FormMethodTemplate
                 return 0;
             }
         },
@@ -756,27 +1041,42 @@ var Form = {
             Form.FormMaster = GetParameterByName('FormMaster');
             Form.FormID = GetParameterByName('FormID');
         },
-        CurrentUser:function(){
-            var userid = _spPageContextInfo.userId;
-            var requestUri = _spPageContextInfo.webAbsoluteUrl + "/_api/web/getuserbyid(" + userid + ")";
-            var requestHeaders = { "accept" : "application/json;odata=verbose" };
-            $.ajax({
-                url : requestUri,
-                contentType : "application/json;odata=verbose",
-                headers : requestHeaders,
-                async:false,
-                success : function(data){
-                    data = data.d;
-                    CurrentUser.ID = data.Id;
-                    CurrentUser.Name = data.Title;
-                    CurrentUser.Email = data.Email;
-                    CurrentUser.LoginName = data.LoginName;
-                },
-                error : function(err){
-                    alert("error");
+        InfoPerson:function(ID){
+            var EmpID;
+            var EmpName;
+
+            var SetData_Approver = $('#peoplePickerDiv_TopSpan_HiddenInput').val();
+            if(SetData_Approver){
+                var appset = JSON.parse(SetData_Approver);
+                var arr = appset[0].Key;
+                    EmpName = appset[0].DisplayText;
+                var LoginName = arr.split('|');
+                var LoginName = LoginName[1];
+                var clientContext = SP.ClientContext.get_current();
+                var website = clientContext.get_web();
+                currentUser = website.ensureUser(LoginName);
+                clientContext.load(website);
+                clientContext.load(currentUser);
+                clientContext.executeQueryAsync(onRequestSucceeded, onRequestFailed);
+
+                function onRequestSucceeded() {
+                //ApproverID =  currentUser.get_id();
+                EmpID = currentUser.get_id();;
+                $(ID).attr('title',EmpID);
+                $(ID).val(EmpName);
+            
                 }
-            });
-        }
+
+                function onRequestFailed(sender, args) {
+                    //error handling
+                    alert('Error: ' + args.get_message());
+                }
+            }
+            
+            $('#MainModal').modal('hide');
+        },
+
+        
     },
     Module:{
         Summernote:function(selector){
@@ -814,70 +1114,72 @@ var Form = {
             $('.note-popover , .popover').hide();
         },
     },
-    HistoryLog:function(Status){
-        if(Status == 'add'){
-        
-            var data = [{
-                    ColumnName:null,
-                    value:null,
-                }];
-    
-            var comment = $('#CommentApproval').val();
-            if(comment.length == 0){
-                comment = '-';
-            }
-    
-                data[0] = { ColumnName:'Role',          Value:$('#Permission').text()};
-                data[1] = { ColumnName:'Action',        Value:$('#Approval_Select option:selected').text()};
-                data[2] = { ColumnName:'Action_by',     Value:CurrentUser.Name};
-                data[3] = { ColumnName:'DateTime',      Value:GetCurrentTime()};
-                data[4] = { ColumnName:'Comment',       Value:comment};
-                data[5] = { ColumnName:'FormID',        Value:FormID};
-                
-                var clientContext = new SP.ClientContext(SiteUrl);
-                var oList = clientContext.get_web().get_lists().getByTitle(Disp_HistoryLog);
-                var itemCreateInfo = new SP.ListItemCreationInformation();
-                this.oListItem = oList.addItem(itemCreateInfo);
-                var length = data.length;
-                for(i=0;i<length;i++){
+    Log:{
+        HistoryLog:function(Status){
+            if(Status == 'add'){
             
-                    oListItem.set_item(data[i].ColumnName,data[i].Value);
-                }            
-                oListItem.update();	
-                clientContext.executeQueryAsync(
-                function(){
-                    
-                    console.log('Add log completed..');
-                    
-                },
-                function(){
-    
-                    alert('add log error..');
-                });
-        }
-        else if('get'){
-            var query = '?$select=Action,Action_by,DateTime,Comment,FormID,Role&$top=100&$filter=FormID eq \''+Form.FormID+'\'&$orderby=Created asc';
-            var data = GetItemByRestAPI(Disp_HistoryLog,query);
-            if(data){
-                $('#HistoryRow').empty();
-                var str='';
-                for(i=0;i<data.length;i++){
-                    str+='<tr style="border-style:solid; border-width:1px; border-color:lightgray;">';
-                    str+='  <td style="text-align:left; color:black;" colspan="1">'+data[i].Role+'</td>';
-                    str+='  <td style="text-align:left; color:black;" colspan="1">'+data[i].Action+'</td>';
-                    str+='  <td style="text-align:left; color:black;" colspan="1">'+data[i].Action_by+'</td>';
-                    str+='  <td style="text-align:left; color:black;" colspan="1">'+data[i].DateTime+'</td>';
-                    str+='  <td style="text-align:left; color:black;" colspan="1">'+data[i].Comment+'</td>';
-                    str+='</tr>';
-    
+                var data = [{
+                        ColumnName:null,
+                        value:null,
+                    }];
+        
+                var comment = $('#CommentApproval').val();
+                if(comment.length == 0){
+                    comment = '-';
                 }
-                $('#HistoryRow').append(str);
+        
+                    data[0] = { ColumnName:'Role',          Value:$('#Permission').text()};
+                    data[1] = { ColumnName:'Action',        Value:$('#Approval_Select option:selected').text()};
+                    data[2] = { ColumnName:'Action_by',     Value:CurrentUser.Name};
+                    data[3] = { ColumnName:'DateTime',      Value:GetCurrentTime()};
+                    data[4] = { ColumnName:'Comment',       Value:comment};
+                    data[5] = { ColumnName:'FormID',        Value:FormID};
+                    
+                    var clientContext = new SP.ClientContext(SiteUrl);
+                    var oList = clientContext.get_web().get_lists().getByTitle(Disp_HistoryLog);
+                    var itemCreateInfo = new SP.ListItemCreationInformation();
+                    this.oListItem = oList.addItem(itemCreateInfo);
+                    var length = data.length;
+                    for(i=0;i<length;i++){
+                
+                        oListItem.set_item(data[i].ColumnName,data[i].Value);
+                    }            
+                    oListItem.update();	
+                    clientContext.executeQueryAsync(
+                    function(){
+                        
+                        console.log('Add log completed..');
+                        
+                    },
+                    function(){
+        
+                        alert('add log error..');
+                    });
             }
-        }   
-        else{
-    
-            console.log('History log status error...');
-        }
+            else if('get'){
+                var query = '?$select=Action,Action_by,DateTime,Comment,FormID,Role&$top=100&$filter=FormID eq \''+Form.FormID+'\'&$orderby=Created asc';
+                var data = GetItemByRestAPI(Disp_HistoryLog,query);
+                if(data){
+                    $('#HistoryRow').empty();
+                    var str='';
+                    for(i=0;i<data.length;i++){
+                        str+='<tr style="border-style:solid; border-width:1px; border-color:lightgray;">';
+                        str+='  <td style="text-align:left; color:black;" colspan="1">'+data[i].Role+'</td>';
+                        str+='  <td style="text-align:left; color:black;" colspan="1">'+data[i].Action+'</td>';
+                        str+='  <td style="text-align:left; color:black;" colspan="1">'+data[i].Action_by+'</td>';
+                        str+='  <td style="text-align:left; color:black;" colspan="1">'+data[i].DateTime+'</td>';
+                        str+='  <td style="text-align:left; color:black;" colspan="1">'+data[i].Comment+'</td>';
+                        str+='</tr>';
+        
+                    }
+                    $('#HistoryRow').append(str);
+                }
+            }   
+            else{
+        
+                console.log('History log status error...');
+            }
+        },
     },
     Control:{
         Input:{
@@ -910,50 +1212,6 @@ var Form = {
             },
         },
         Button:{
-            Init:function(){
-                var Button = {
-                    1:{
-                        id:'#NavBarRefresh',
-                        title:'Refresh',
-                        onclick:'Form.Refresh();',
-                    },
-                    2:{
-                        id:'#NavBarClose',
-                        title:'Refresh',
-                        onclick:'Form.Button.CloseForm();',
-                    },
-                    3:{
-                        id:'#NavBarSave',
-                        title:'Refresh',
-                        onclick:'Form.SaveDraft();',
-                    },
-                    4:{
-                        id:'#NavBarAttachment',
-                        title:'Refresh',
-                        onclick:'Form.Attachment();',
-                    },
-                    5:{
-                        id:'#RightNavGoToTop',
-                        title:'Go to top',
-                        onclick:'Form.Button.GoToTop();',
-                    },
-                    6:{
-                        id:'#RightNavGoToBottom',
-                        title:'Go to bottom',
-                        onclick:'Form.Button.GoToBottom();',
-                    },
-                    7:{
-                        id:'#RightNavRefresh',
-                        title:'Refresh',
-                        onclick:'Form.Refresh();',
-                    },
-    
-                };
-        
-                for(i in Button){
-                    $(Button[i].id).attr('onclick',Button[i].onclick);
-                }
-            },
             CloseForm:function(){
                 var flag = confirm('Do you want to exit this form ?');
                 if(flag == true){
@@ -983,53 +1241,564 @@ var Form = {
 
         },
     },
+    Event:{
+        SaveDraft:function(){
+            Form.TriggerTempData();
+            var StatusCreate = CheckUpdateOrCreate(ListData);
+            switch(StatusCreate){   
+                case 'Create':
+    
+                            Form.SaveDraft.SaveByCreateListItem();
+                            SaveByCreateListItem(ListData,TempCurrentData);
+                            UpdateFlagAttachment(); 
+                        break;
+                case 'Update':
+    
+                            Form.SaveDraft.SaveByUpdateListItem();
+                            SaveByUpdateListItem(ListData,TempCurrentData);
+                            UpdateFlagAttachment(); 
+                        break;
+            }
+    
+            function SaveByCreateListItem(ListName,Object){
+    
+                var dataset = {};
+                dataset = Object;
+                var clientContext = new SP.ClientContext(SiteUrl);
+                var oList = clientContext.get_web().get_lists().getByTitle(ListName);
+                var itemCreateInfo = new SP.ListItemCreationInformation();
+                this.oListItem = oList.addItem(itemCreateInfo);
+                SetPropertiesForm(oListItem,'Create');
+                oListItem.set_item('FormStatus','Save Draft');
+                oListItem.set_item('RunningNO','Draft');
+                oListItem.set_item('FlagSubmit',false);
+                SetFormatData(dataset,oListItem); // set item all object by this action
+                oListItem.update();	
+                clientContext.executeQueryAsync(
+                function(){
+            
+                    $('#MainModal').modal('hide');
+            
+                    Swal.fire(
+                        'Save as draft completely',
+                        'Click for continue',
+                        'success',
+                        {
+                            timer: 1500
+                        }
+                    ).then((result) => {
+            
+                        if(result.value){
+                            SubmitActionFinalFlag('SaveDraft');
+                        }
+            
+                    });
+                    
+                    
+            
+                    // $('#ModalBody').empty();
+                    // $('#ModalBody').append('<p style="text-align:center;">Successfully...<p>');
+                    
+                },
+                function(sender, args){
+            
+                    $('#MainModal').modal('hide');
+            
+                    Swal.fire({
+                        type: 'error',
+                        title: 'Oops... <br>Something went wrong! can not save as draft',
+                        footer: 'Please contact your site admin for support.',
+                       
+                        
+                    });
+            
+                    SubmitActionFinalFlag(false);
+                    // $('#ModalBody').empty();
+                    // $('#ModalBody').append('<p style="text-align:center; color:red;">Create list item error...<p>');
+                    // alert('Request failed. ' + args.get_message() + '\n' + args.get_stackTrace());
+                   
+                }
+            
+                );
+            
+            }
+    
+            function SaveByUpdateListItem(ListName,Object){
+    
+                var dataset = Object ;
+                var ItemID;
+                var query = '?$select=ID&$filter=FormID eq \''+FormID+'\'';
+                var data = GetItemByRestAPI(ListName,query);
+                if(data){
+                    ItemID = data[0].ID;
+                }
+            
+                var clientContext = new SP.ClientContext(SiteUrl);
+                var oList = clientContext.get_web().get_lists().getByTitle(ListName);
+                this.oListItem = oList.getItemById(ItemID);
+                SetPropertiesForm(oListItem,'Update');
+                oListItem.set_item('FormStatus','Save Draft');
+                oListItem.set_item('RunningNO','Draft');
+                oListItem.set_item('FlagSubmit',false);
+                SetFormatData(dataset,oListItem); // set item all object by this action
+            
+                oListItem.update();	
+                clientContext.executeQueryAsync(function(){
+            
+                    
+                    // $('#ModalBody').empty();
+                    // $('#ModalBody').append('<p style="text-align:center;">Save Successfully...<p>');
+                    // $('#MainModal').modal('hide');
+                    Swal.fire(
+                        'Save as draft completely',
+                        'Click for continue',
+                        'success',
+                        {
+                            timer: 1500
+                        }
+                    ).then((result) => {
+            
+                        if(result.value){
+                            SubmitActionFinalFlag('SaveDraft');
+                        }
+            
+                    });
+            
+                }, function(){
+            
+                    $('#MainModal').modal('hide');
+            
+                    Swal.fire({
+                        type: 'error',
+                        title: 'Oops... <br>Something went wrong! can not save as draft',
+                        footer: 'Please contact your site admin for support.',
+                        
+                        
+                    });
+            
+                    SubmitActionFinalFlag(false);
+            
+                });
+            
+            }
+    
+            
+        },
+        Create:function(ListName,Object){
+            var dataset = {};
+            dataset = Object;
+            var clientContext = new SP.ClientContext(SiteUrl);
+            var oList = clientContext.get_web().get_lists().getByTitle(ListName);
+            var itemCreateInfo = new SP.ListItemCreationInformation();
+            this.oListItem = oList.addItem(itemCreateInfo);
+            SetPropertiesForm(oListItem,'Create');
+            SetFormatData(dataset,oListItem); // set item all object by this action
+            oListItem.update();	
+            clientContext.executeQueryAsync(
+            function(){
+        
+                $('#MainModal').modal('hide');
+        
+                Swal.fire(
+                    'Submit Successfully',
+                    'Click for continue',
+                    'success',
+                    {
+                        timer: 1500
+                    }
+                ).then((result) => {
+        
+                    if(result.value){
+                        Form.FormSubmit.ActionFinalFlag(true);
+                    }
+        
+                });
+                
+                
+            },
+            function(sender, args){
+        
+                $('#MainModal').modal('hide');
+        
+                Swal.fire({
+                    type: 'error',
+                    title: 'Oops... <br> Something went wrong!',
+                    footer: 'Please contact your site admin for support.',
+                   
+                    
+                });
+        
+                Form.FormSubmit.ActionFinalFlag(false);               
+            }
+        
+            );
+        },
+        Update:function(ListName,Object){
+            var dataset = Object ;
+            var ItemID;
+            var query = '?$select=ID&$filter=FormID eq \''+FormID+'\'';
+            var data = GetItemByRestAPI(ListName,query);
+            if(data){
+                ItemID = data[0].ID;
+            }
+        
+            var clientContext = new SP.ClientContext(SiteUrl);
+            var oList = clientContext.get_web().get_lists().getByTitle(ListName);
+            this.oListItem = oList.getItemById(ItemID);
+            SetPropertiesForm(oListItem,'Update');
+            SetFormatData(dataset,oListItem); // set item all object by this action
+            oListItem.update();	
+            clientContext.executeQueryAsync(function(){
+        
+                
+                // $('#ModalBody').empty();
+                // $('#ModalBody').append('<p style="text-align:center;">Save Successfully...<p>');
+                $('#MainModal').modal('hide');
+                Swal.fire(
+                    'Submit Successfully',
+                    'Click for continue',
+                    'success',
+                    {
+                        timer: 1500
+                    }
+                ).then((result) => {
+        
+                    if(result.value){
+                        SubmitActionFinalFlag(true);
+                    }
+        
+                });
+        
+            }, function(){
+        
+                $('#MainModal').modal('hide');
+        
+                Swal.fire({
+                    type: 'error',
+                    title: 'Oops... <br> Something went wrong!',
+                    footer: 'Please contact your site admin for support.',
+                    
+                    
+                });
+        
+                Form.FormSubmit.SubmitActionFinalFlag(false);
+        
+            });
+        },
+        Delete:function(){
+            // Get ID Form by FormID
+            var query = '?$select=ID&$top=1&$filter=FormID eq \''+FormID+'\'';
+            var data = GetItemByRestAPI(ListData, query);
+            if(data){
+                Form.Query.Delete(Form.List.Name,data[0].ID);
+            }
+        },
+        Trigger:{
+            TempData:function(){
+                for(var i in Form.FieldData){
+        
+                    var field = Form.FieldData[i];
+                
+                        switch(field.TypeDom){
+                            case 'text':
+                                            field.Data = $('#'+field.ID).val();
+                                            break;
+                            case 'textarea':
+                                            field.Data = $('#'+field.ID).val();
+                                            break;
+                            case 'date':
+                                            var tempdata = $('#'+field.ID).val();
+        
+                                            if(tempdata){
+                                                field.Data = $('#'+field.ID).val();
+                                            }
+                                            else{
+                                                field.Data = '';
+                                            }
+                                            
+                                        
+                                            break;
+        
+                            case 'label':
+                                            field.Data = $('#'+field.ID).text();
+                                        
+                                        
+                                            break;
+                            case 'select':
+                                            
+                                            if(field.TypeCol == 'people'){  // in case select query from people 
+                                                if($('#'+field.ID).val() != '-'){
+                                                    field.Data = {
+                                                        //ID: $('#'+field.ID).val(),
+                                                        ID: $('#'+field.ID + ' option').eq($('#'+field.ID).prop("selectedIndex")).val(),
+                                                        Title: $('#'+field.ID+' option:selected').text()
+                                                    }
+                                                }
+                                            
+                                            }
+                                            else{ // in case select query from normal text
+                                                field.Data = $('#'+field.ID).val();
+                                            }
+                                            break;
+                            case 'people':  
+                                        
+                                            field.Data = {
+                                                ID: $('#'+field.ID).attr('title'),
+                                                Title: $('#'+field.ID).val()
+                                            }
+                                            
+        
+                                            break;
+                            case 'people_multiple':  
+                                        
+                                            if(field.Data){
+                                                field.Data = Form.Set.People.data(field.Data);
+                                            }
+                            
+                                            
+                                            break;
+        
+                                            
+                            case 'checkbox':
+                                            if ($('#'+field.ID).is(":checked"))
+                                            {
+                                                field.Data = true;
+                                            }
+                                            else{
+                                                field.Data = false;
+                                            }
+                                            break;
+                            case 'var':
+                                            field.Data = field.Data;
+                            
+                                            break;
+                            case 'radio':
+                                            field.Data = $('input[name='+field.ID+']:checked').val();
+                                            if(!field.Data){
+                                                field.Data = '';
+                                            }
+                            
+                                            break;
+                            case 'array':
+                                            var tempdata = field.Data;
+                                            field.Data = tempdata.toString();
+                            
+                                            break;
+        
+                            case 'summernote':
+        
+                                            field.Data = $('#'+field.ID).summernote('code');
+        
+                                            break;
+        
+                            case 'object':  
+                                            var index = field.ID;
+                                            var sum_str = '';
+                                            if(index == 'T41' || index == 'T42' || index == 'T43' || index == 'T44' || index == 'T45'){
+                                                for(loop=1;loop<=10 ;loop++){
+                                                    var TempID = index + '_Col' + loop;
+                                                    var type = $("#"+TempID).attr("type");
+                                                    var TempCheck;
+                                                    switch(type){
+                                                        case 'checkbox':
+        
+                                                                        if ($('#'+TempID).is(":checked"))
+                                                                        {
+                                                                            TempCheck = 'true';
+                                                                        }
+                                                                        else{
+                                                                            TempCheck = 'false';
+                                                                        }
+                                                                        
+                                                                        sum_str += '['+TempID+'|'+TempCheck+'];';
+                                                                        
+                                                                        break;
+                                                        case 'text':
+                                                                        var TempData = $('#'+TempID).val();
+                                                                        sum_str += '['+TempID+'|'+TempData+'];';
+                                                                        
+        
+                                                                        break;
+        
+                                                    }
+                                                    
+                                                }
+                                                field.Data = sum_str;
+                                            }
+                                            else{
+                                                for(loop=1;loop<=100;loop++){
+                                                    var TempID = index + '_Col' + loop;
+                                                    var TempData = $('#'+TempID).val();
+                                                    if(!TempData){
+                                                    
+                                                    }
+                                                    else{
+                                                        sum_str += '['+TempID+'|'+TempData+'];';
+                                                    }     
+                                                }
+                                                
+                                                field.Data = sum_str;
+                                            }
+                                            
+                                            break;
+                        
+                        } 
+                }      
+            },
+        },
+    },
+    Query:{
+        CreateItem:function(){
+
+        },
+        UpdateItem:function(){
+            
+        },
+        DeleteItem:function(ListName,ItemID){
+            var status = false;
+            var flag = confirm('Do you want to delete this item ?');
+            if(flag == true){
+                    var clientContext = new SP.ClientContext(SiteUrl);
+                    var oList = clientContext.get_web().get_lists().getByTitle(ListName);
+                    this.oListItem = oList.getItemById(ItemID);
+                    oListItem.deleteObject();
+                    clientContext.executeQueryAsync(function(){
+                    alert('Remove complete');
+                        status = true;
+                        window.location.href = SiteUrl;
+                    
+                    
+                    },function(){
+                        console.log('Remove Item Error');
+                
+                    });
+                
+            }
+        },
+
+    },
+    Rule:{
+        
+    },
+    FormLoad:{
+        FormView:function(data){
+            if(data){
+
+                if(CurrentUser.Permission == 'Admin'){
+        
+                }else{
+                    $('.ms-cui-tts,#RibbonContainer-TabRowRight,#O365_MainLink_Settings,#O365_MainLink_Help,#Sites_BrandBar').slideUp(2000);
+                }
+        
+                
+                
+                
+               
+                SetFormAction(); // FormMethodTemplate
+                    
+                // Set top right info
+                $('#DocNO').text(data.RunningNO);
+                $('#CreateDate').text(ConvertDate(data.Created)); 
+                $('#FormStatus').text(data.FormStatus);
+                $('#CreatedBy').text(data.Author.Title);
+        
+                // Map Current view according to FormView in config.js
+                // Form.FormView = FormMaster[MasterFormID].FormStep[Form.FormStatus].FormView;
+                Form.FormStatus = data.FormStatus;
+                Form.FormView = FormMaster[MasterFormID].FormStep[Form.FormStatus].FormView;
+          
+                if(Form.FormView){
+                    SwitchViewTo(Form.FormView,data);
+                }
+                else{
+                    Disable_Panel('All');
+                }
+        
+            }
+        },   
+        FormNew:function(){
+             // set panel status 
+            if(CurrentUser.Permission == 'Admin'){
+
+            }else{
+                
+                $('.ms-cui-tts,#RibbonContainer-TabRowRight,#O365_MainLink_Settings,#O365_MainLink_Help,#Sites_BrandBar').slideUp(2000);
+            
+            }
+            
+            $('#DocNO').text('-');
+            $('#CreateDate , #RequestDate').text(SetDateTime()); 
+            $('#FormStatus').text('Create');
+            $('#CreatedBy').text(CurrentUser.Name);
+            
+            SetFormAction(); // FormMethodTemplate
+
+            // Set Panel People end of section 1
+            $('#Requestor').val(CurrentUser.Name);
+            $('#Requestor').attr('title',CurrentUser.ID);
+            // End Set Panel People end of section 1
+
+            // Disable part 2 exclude admin 
+            if(CurrentUser.Permission == 'Admin'){
+                $('#Permission').text('Admin'); 
+            }
+            else{ // not admin
+                $('#Permission').text('Requestor');
+            
+            }  
+        },
+    },
     FormSubmit:{
-        SubmitAction:function(){
+        Submit:function(){
                 // disable submit button
                 $('#SubmitAction').prop('disabled',true);
-
 
                 var ActionTitle = $("#Approval_Select option:selected").text();
                 Form.StatusAction = $('#Approval_Select').val();
                 Form.FlagSubmit = true;
                 if(Form.StatusAction != 0){
-                    // $('#MainModal').modal('show');
-                    // AddLoading();
-                    // $('#TitleModal').text(ActionTitle);
-
-                    TriggerTempData();
+                    Form.Event.Trigger.TempData();
 
                     // Validate 
-                    var FlagValidatePass = ValidateData(); // FormMethodTemplate
+                    var FlagValidatePass = Form.FormSubmit.Validate(); 
                     
                     if(FlagValidatePass == false){
                         return;
                     }
                 
-                    var StatusCreate = CheckUpdateOrCreate(ListData); // FormMethodTemplate
-                    // $('#MainModal').modal('hide');
+                    function CheckUpdateOrCreate(List){
+
+                            var query ='?$select=FormID&$top=1&$filter=FormID eq \''+FormID+'\'';
+                            var data = GetItemByRestAPI(List,query);
+                            var status = '';
+                            if(data){
+                                if(data.length>0){
+                                    status = 'Update';
+                                }
+                                else{
+                                    status = 'Create';
+                                }
+                            }
+                            else{
+                                status = 'Create';
+                            }
+                        
+                            return status;
+                    }
+                    var StatusCreate = CheckUpdateOrCreate(ListData); 
+                   
                     try{
 
-                        switch(StatusCreate){   // FormMethodTemplate
+                        switch(StatusCreate){   
                             case 'Create':
-                                
-                                
-                                        CreateListItem(ListData,Form.FieldData); // FormMethodTemplate
-                                    
-                                        
-                                    
+                                        Form.Event.Create(ListData,Form.FieldData); 
                                     break;
-                            case 'Update':
-                                    
-                                        UpdateListItem(ListData,Form.FieldData); // FormMethodTemplate
-                                    
+                            case 'Update':                            
+                                        Form.Event.Update(ListData,Form.FieldData); 
                                     break;
                         }
 
                     }catch(err){
-                        
-                        
-
                         Swal.fire({
                             type: 'error',
                             title: 'Oops... <br> Something went wrong!',
@@ -1037,7 +1806,6 @@ var Form = {
                             
                             
                         });
-
                         $('#SubmitAction').prop('disabled',false);
                     }
                     
@@ -1047,30 +1815,9 @@ var Form = {
                     
                     // enable submit button
                     $('#SubmitAction').prop('disabled',false);
-                }
-
-
-                function CheckUpdateOrCreate(List){
-
-                        var query ='?$select=FormID&$top=1&$filter=FormID eq \''+FormID+'\'';
-                        var data = GetItemByRestAPI(List,query);
-                        var status = '';
-                        if(data){
-                            if(data.length>0){
-                                status = 'Update';
-                            }
-                            else{
-                                status = 'Create';
-                            }
-                        }
-                        else{
-                            status = 'Create';
-                        }
-                    
-                        return status;
-                }
+                }       
         },
-        SubmitActionFinalFlag:function(Flag){
+        ActionFinalFlag:function(Flag){
             if(Flag == true){
 
                 UpdateFlagAttachment(); // FormMethodTemplate
@@ -1089,10 +1836,8 @@ var Form = {
             }
         },
         Validate:function(){
-            var FormIndex = GetParameterByName('FormMaster');
-            var FormConfig = FormMaster[FormIndex];
-            var Setting = FormConfig['FormStep'];
-
+      
+            var Setting = Form.FormStep;
             var texterror = '';
             var FlagPass = true;
             for(var i in Setting){
@@ -1185,446 +1930,6 @@ var Form = {
             return FlagPass;
         },
     },
-    TriggerTempData:function(){
-        for(var i in Form.FieldData){
-
-            var field = Form.FieldData[i];
-        
-                switch(field.TypeDom){
-                    case 'text':
-                                    field.Data = $('#'+field.ID).val();
-                                    break;
-                    case 'textarea':
-                                    field.Data = $('#'+field.ID).val();
-                                    break;
-                    case 'date':
-                                    var tempdata = $('#'+field.ID).val();
-
-                                    if(tempdata){
-                                        field.Data = $('#'+field.ID).val();
-                                    }
-                                    else{
-                                        field.Data = '';
-                                    }
-                                    
-                                
-                                    break;
-
-                    case 'label':
-                                    field.Data = $('#'+field.ID).text();
-                                
-                                
-                                    break;
-                    case 'select':
-                                    
-                                    if(field.TypeCol == 'people'){  // in case select query from people 
-                                        if($('#'+field.ID).val() != '-'){
-                                            field.Data = {
-                                                //ID: $('#'+field.ID).val(),
-                                                ID: $('#'+field.ID + ' option').eq($('#'+field.ID).prop("selectedIndex")).val(),
-                                                Title: $('#'+field.ID+' option:selected').text()
-                                            }
-                                        }
-                                    
-                                    }
-                                    else{ // in case select query from normal text
-                                        field.Data = $('#'+field.ID).val();
-                                    }
-                                    break;
-                    case 'people':  
-                                
-                                    field.Data = {
-                                        ID: $('#'+field.ID).attr('title'),
-                                        Title: $('#'+field.ID).val()
-                                    }
-                                    
-
-                                    break;
-                    case 'people_multiple':  
-                                
-                                    if(field.Data){
-                                        field.Data = Form.Set.People.data(field.Data);
-                                    }
-                    
-                                    
-                                    break;
-
-                                    
-                    case 'checkbox':
-                                    if ($('#'+field.ID).is(":checked"))
-                                    {
-                                        field.Data = true;
-                                    }
-                                    else{
-                                        field.Data = false;
-                                    }
-                                    break;
-                    case 'var':
-                                    field.Data = field.Data;
-                    
-                                    break;
-                    case 'radio':
-                                    field.Data = $('input[name='+field.ID+']:checked').val();
-                                    if(!field.Data){
-                                        field.Data = '';
-                                    }
-                    
-                                    break;
-                    case 'array':
-                                    var tempdata = field.Data;
-                                    field.Data = tempdata.toString();
-                    
-                                    break;
-
-                    case 'summernote':
-
-                                    field.Data = $('#'+field.ID).summernote('code');
-
-                                    break;
-
-                    case 'object':  
-                                    var index = field.ID;
-                                    var sum_str = '';
-                                    if(index == 'T41' || index == 'T42' || index == 'T43' || index == 'T44' || index == 'T45'){
-                                        for(loop=1;loop<=10 ;loop++){
-                                            var TempID = index + '_Col' + loop;
-                                            var type = $("#"+TempID).attr("type");
-                                            var TempCheck;
-                                            switch(type){
-                                                case 'checkbox':
-
-                                                                if ($('#'+TempID).is(":checked"))
-                                                                {
-                                                                    TempCheck = 'true';
-                                                                }
-                                                                else{
-                                                                    TempCheck = 'false';
-                                                                }
-                                                                
-                                                                sum_str += '['+TempID+'|'+TempCheck+'];';
-                                                                
-                                                                break;
-                                                case 'text':
-                                                                var TempData = $('#'+TempID).val();
-                                                                sum_str += '['+TempID+'|'+TempData+'];';
-                                                                
-
-                                                                break;
-
-                                            }
-                                            
-                                        }
-                                        field.Data = sum_str;
-                                    }
-                                    else{
-                                        for(loop=1;loop<=100;loop++){
-                                            var TempID = index + '_Col' + loop;
-                                            var TempData = $('#'+TempID).val();
-                                            if(!TempData){
-                                            
-                                            }
-                                            else{
-                                                sum_str += '['+TempID+'|'+TempData+'];';
-                                            }     
-                                        }
-                                        
-                                        field.Data = sum_str;
-                                    }
-                                    
-                                    break;
-                
-                } 
-        }      
-    },
-    SaveDraft:function(){
-        Form.TriggerTempData();
-        var StatusCreate = CheckUpdateOrCreate(ListData);
-        switch(StatusCreate){   
-            case 'Create':
-
-                        Form.SaveDraft.SaveByCreateListItem();
-                        SaveByCreateListItem(ListData,TempCurrentData);
-                        UpdateFlagAttachment(); 
-                    break;
-            case 'Update':
-
-                        Form.SaveDraft.SaveByUpdateListItem();
-                        SaveByUpdateListItem(ListData,TempCurrentData);
-                        UpdateFlagAttachment(); 
-                    break;
-        }
-
-        function SaveByCreateListItem(ListName,Object){
-
-            var dataset = {};
-            dataset = Object;
-            var clientContext = new SP.ClientContext(SiteUrl);
-            var oList = clientContext.get_web().get_lists().getByTitle(ListName);
-            var itemCreateInfo = new SP.ListItemCreationInformation();
-            this.oListItem = oList.addItem(itemCreateInfo);
-            SetPropertiesForm(oListItem,'Create');
-            oListItem.set_item('FormStatus','Save Draft');
-            oListItem.set_item('RunningNO','Draft');
-            oListItem.set_item('FlagSubmit',false);
-            SetFormatData(dataset,oListItem); // set item all object by this action
-            oListItem.update();	
-            clientContext.executeQueryAsync(
-            function(){
-        
-                $('#MainModal').modal('hide');
-        
-                Swal.fire(
-                    'Save as draft completely',
-                    'Click for continue',
-                    'success',
-                    {
-                        timer: 1500
-                    }
-                ).then((result) => {
-        
-                    if(result.value){
-                        SubmitActionFinalFlag('SaveDraft');
-                    }
-        
-                });
-                
-                
-        
-                // $('#ModalBody').empty();
-                // $('#ModalBody').append('<p style="text-align:center;">Successfully...<p>');
-                
-            },
-            function(sender, args){
-        
-                $('#MainModal').modal('hide');
-        
-                Swal.fire({
-                    type: 'error',
-                    title: 'Oops... <br>Something went wrong! can not save as draft',
-                    footer: 'Please contact your site admin for support.',
-                   
-                    
-                });
-        
-                SubmitActionFinalFlag(false);
-                // $('#ModalBody').empty();
-                // $('#ModalBody').append('<p style="text-align:center; color:red;">Create list item error...<p>');
-                // alert('Request failed. ' + args.get_message() + '\n' + args.get_stackTrace());
-               
-            }
-        
-            );
-        
-        }
-
-        function SaveByUpdateListItem(ListName,Object){
-
-            var dataset = Object ;
-            var ItemID;
-            var query = '?$select=ID&$filter=FormID eq \''+FormID+'\'';
-            var data = GetItemByRestAPI(ListName,query);
-            if(data){
-                ItemID = data[0].ID;
-            }
-        
-            var clientContext = new SP.ClientContext(SiteUrl);
-            var oList = clientContext.get_web().get_lists().getByTitle(ListName);
-            this.oListItem = oList.getItemById(ItemID);
-            SetPropertiesForm(oListItem,'Update');
-            oListItem.set_item('FormStatus','Save Draft');
-            oListItem.set_item('RunningNO','Draft');
-            oListItem.set_item('FlagSubmit',false);
-            SetFormatData(dataset,oListItem); // set item all object by this action
-        
-            oListItem.update();	
-            clientContext.executeQueryAsync(function(){
-        
-                
-                // $('#ModalBody').empty();
-                // $('#ModalBody').append('<p style="text-align:center;">Save Successfully...<p>');
-                // $('#MainModal').modal('hide');
-                Swal.fire(
-                    'Save as draft completely',
-                    'Click for continue',
-                    'success',
-                    {
-                        timer: 1500
-                    }
-                ).then((result) => {
-        
-                    if(result.value){
-                        SubmitActionFinalFlag('SaveDraft');
-                    }
-        
-                });
-        
-            }, function(){
-        
-                $('#MainModal').modal('hide');
-        
-                Swal.fire({
-                    type: 'error',
-                    title: 'Oops... <br>Something went wrong! can not save as draft',
-                    footer: 'Please contact your site admin for support.',
-                    
-                    
-                });
-        
-                SubmitActionFinalFlag(false);
-        
-            });
-        
-        }
-
-        
-    },
-    Create:function(ListName,Object){
-        var dataset = {};
-        dataset = Object;
-        var clientContext = new SP.ClientContext(SiteUrl);
-        var oList = clientContext.get_web().get_lists().getByTitle(ListName);
-        var itemCreateInfo = new SP.ListItemCreationInformation();
-        this.oListItem = oList.addItem(itemCreateInfo);
-        SetPropertiesForm(oListItem,'Create');
-        SetFormatData(dataset,oListItem); // set item all object by this action
-        oListItem.update();	
-        clientContext.executeQueryAsync(
-        function(){
-    
-            $('#MainModal').modal('hide');
-    
-            Swal.fire(
-                'Submit Successfully',
-                'Click for continue',
-                'success',
-                {
-                    timer: 1500
-                }
-            ).then((result) => {
-    
-                if(result.value){
-                    SubmitActionFinalFlag(true);
-                }
-    
-            });
-            
-            
-    
-            // $('#ModalBody').empty();
-            // $('#ModalBody').append('<p style="text-align:center;">Successfully...<p>');
-            
-        },
-        function(sender, args){
-    
-            $('#MainModal').modal('hide');
-    
-            Swal.fire({
-                type: 'error',
-                title: 'Oops... <br> Something went wrong!',
-                footer: 'Please contact your site admin for support.',
-               
-                
-            });
-    
-            SubmitActionFinalFlag(false);
-            // $('#ModalBody').empty();
-            // $('#ModalBody').append('<p style="text-align:center; color:red;">Create list item error...<p>');
-            // alert('Request failed. ' + args.get_message() + '\n' + args.get_stackTrace());
-           
-        }
-    
-        );
-    },
-    Update:function(ListName,Object){
-        var dataset = Object ;
-        var ItemID;
-        var query = '?$select=ID&$filter=FormID eq \''+FormID+'\'';
-        var data = GetItemByRestAPI(ListName,query);
-        if(data){
-            ItemID = data[0].ID;
-        }
-    
-        var clientContext = new SP.ClientContext(SiteUrl);
-        var oList = clientContext.get_web().get_lists().getByTitle(ListName);
-        this.oListItem = oList.getItemById(ItemID);
-        SetPropertiesForm(oListItem,'Update');
-        SetFormatData(dataset,oListItem); // set item all object by this action
-        oListItem.update();	
-        clientContext.executeQueryAsync(function(){
-    
-            
-            // $('#ModalBody').empty();
-            // $('#ModalBody').append('<p style="text-align:center;">Save Successfully...<p>');
-            $('#MainModal').modal('hide');
-            Swal.fire(
-                'Submit Successfully',
-                'Click for continue',
-                'success',
-                {
-                    timer: 1500
-                }
-            ).then((result) => {
-    
-                if(result.value){
-                    SubmitActionFinalFlag(true);
-                }
-    
-            });
-    
-        }, function(){
-    
-            $('#MainModal').modal('hide');
-    
-            Swal.fire({
-                type: 'error',
-                title: 'Oops... <br> Something went wrong!',
-                footer: 'Please contact your site admin for support.',
-                
-                
-            });
-    
-            Form.FormSubmit.SubmitActionFinalFlag(false);
-    
-        });
-    },
-    Delete:function(){
-        // Get ID Form by FormID
-        var query = '?$select=ID&$top=1&$filter=FormID eq \''+FormID+'\'';
-        var data = GetItemByRestAPI(ListData, query);
-        if(data){
-            Form.Query.Delete(Form.List.Name,data[0].ID);
-        }
-    },
-    Query:{
-        Create:function(){
-
-        },
-        Update:function(){
-            
-        },
-        Delete:function(ListName,ItemID){
-            var status = false;
-            var flag = confirm('Do you want to delete this item ?');
-            if(flag == true){
-                    var clientContext = new SP.ClientContext(SiteUrl);
-                    var oList = clientContext.get_web().get_lists().getByTitle(ListName);
-                    this.oListItem = oList.getItemById(ItemID);
-                    oListItem.deleteObject();
-                    clientContext.executeQueryAsync(function(){
-                    alert('Remove complete');
-                        status = true;
-                        window.location.href = SiteUrl;
-                    
-                    
-                    },function(){
-                        console.log('Remove Item Error');
-                
-                    });
-                
-            }
-        },
-
-    },
     
     
 }
@@ -1635,11 +1940,11 @@ var Form = {
 function FormStart(){
     
     Form.Get.Parameter();
-    Form.Get.CurrentUser();
-    Form.Add.ToGroupMember();
+    Form.User.GetCurrent();
+    Form.User.AddToGroupMember();
     Form.Get.ConfigData();
     Form.Map();
-    Form.Routing();
+    Form.Routing.View();
     Form.Render.Navbar();
     Form.Render.RightNavbar();
     Form.Render.Approval();
@@ -1647,9 +1952,10 @@ function FormStart(){
     Form.Render.Modal();
     Form.Render.View();
     Form.Init.css();
-    Form.Button.Init();
+    Form.Init.Button();
     Form.Set.Initial();
-    Form.Set,RequireField();
+    Form.Set.RequireField();
+    Form.Set.SubmitOption();
     // $('#Title_ActionBy').text(CurrentUser.Name);
 }
 

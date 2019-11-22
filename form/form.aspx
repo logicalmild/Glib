@@ -12,15 +12,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=10; IE=9; IE=8; IE=7" />
 
 <!-- <script src="/_layouts/1033/init.js"></script> -->
-<script type="text/javascript" src="js/MicrosoftAjax.js"></script>
+
 <!-- <script src="/_layouts/sp.core.js"></script> -->
 
 
 
-
-
-<script type="text/javascript" src="/_layouts/15/sp.js"></script>
+<script type="text/javascript" src="js/MicrosoftAjax.js"></script>
 <script type="text/javascript" src="/_layouts/15/sp.runtime.js"></script>
+<script type="text/javascript" src="/_layouts/15/sp.js"></script>
 <!-- <script type="text/javascript" src="/_layouts/15/sp.core.js"></script> -->
 <!-- <script type="text/javascript" src="/_layouts/15/clienttemplates.js"></script>
 <script type="text/javascript" src="/_layouts/15/clientforms.js"></script>

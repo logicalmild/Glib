@@ -3,14 +3,17 @@ $(document).ready(function(){
 
     // GetCurrentUser();
     // GetCurrentGroupUser();
-    SP.SOD.loadMultiple(['sp.js', 'clienttemplates.js','clientforms.js','clientpeoplepicker.js','autofill.js'], function () {
-       
-    });
-    
-    FormStart();
-    
+    // SP.SOD.loadMultiple(['sp.js', 'clienttemplates.js','clientforms.js','clientpeoplepicker.js','autofill.js'], function () {
+        FormStart();
+    // });
+    // SP.SOD.ExecuteOrDelayUntilScriptLoaded(FormStart(), "sp.js");
+    // 
+ 
 
 });
+
+
+
 
 function DataConnection(ConnectionID){
     var SiteUrl = Connection_Obj[ConnectionID].SiteUrl;
@@ -42,3 +45,21 @@ function DataConnection(ConnectionID){
 
     return extr_Data;
 }
+
+function LoadScript(Script){
+    var Url = 'https://logicalmild.github.io/SP-Terminal/module/getlistinfo/getlistinfo.js';
+        $.ajax({
+            url: Url,
+            dataType: "script",
+            success : function()
+            {
+               console.log('Load '+ Script +'success');
+                
+            },
+            error:function(){
+                console.log('Get script ' + Script + ' error.');
+            },
+          });
+}
+
+
