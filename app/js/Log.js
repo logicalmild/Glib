@@ -2,7 +2,7 @@
 
     var CurrentPageUrl = window.location.href;
     var clientContext = new SP.ClientContext(SiteUrl);
-    var oList = clientContext.get_web().get_lists().getByTitle(Log_Access);
+    var oList = clientContext.get_web().get_lists().getByTitle(Site.List.LogAccess.InternalName);
     var itemCreateInfo = new SP.ListItemCreationInformation();
     this.oListItem = oList.addItem(itemCreateInfo);
 

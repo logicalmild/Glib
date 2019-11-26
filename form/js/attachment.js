@@ -1,6 +1,7 @@
 'use strict';
 
-
+var IncorrectMark = '<img style="width:20px; height:20px;" src="'+Site.Url+'/SiteAssets/web/asset/icon/incorrect.png">';
+var CorrectMark = '<img style="width:20px; height:20px;" src="'+Site.Url+'/SiteAssets/web/asset/icon/correct.png">';
  var rndString = "";
 
 
@@ -69,7 +70,7 @@ function Removefile(ItemID){
 //             var Result = '';
 //             Result += '<td>'+data[i].GroupID+'</td>';
 //             Result += '<td>'+$('#File'+(data[i].GroupID)+' td:nth-child(2)').text()+'</td>';
-//             Result += '<td><a target="_blank" href="'+SiteUrl+'/Attachment/'+data[i].Title+'">'+data[i].Title+'</a></td>';
+//             Result += '<td><a target="_blank" href="'+Site.Url+'/Attachment/'+data[i].Title+'">'+data[i].Title+'</a></td>';
 //             Result += '<td>'+data[i].Author.Title+'</td>';
 //             Result += '<td>'+ConvertDateTime(data[i].Created)+'</td>';
 //             Result += '<td><a onclick="Removefile(\''+data[i].ID+'\');" data-toggle="tooltip" title="Remove department" type="button" class="btn btn btn-primary btn-md btn-remove-file"><i class="fa fa-remove" style="color:white;"></i></a></td>';

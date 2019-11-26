@@ -1,21 +1,44 @@
 // SiteInfo ////////////////////////////////////////////////////////////////////////
-var SiteUrl = 'https://scgchemicals.scg.com/lotusnotes/ROC_Store';
-var IncorrectMark = '<img style="width:20px; height:20px;" src="'+SiteUrl+'/SiteAssets/web/asset/icon/incorrect.png">';
-var CorrectMark = '<img style="width:20px; height:20px;" src="'+SiteUrl+'/SiteAssets/web/asset/icon/correct.png">';
-var SiteCollection = 'lotusnotes';
-var SubSite = 'ROC_Store';
+// var SiteUrl = 'https://scgchemicals.scg.com/lotusnotes/ROC_Store';
+var Site = {
+    Url:'https://scgchemicals.scg.com/lotusnotes/ROC_Store',
+    Collection:'lotusnotes',
+    SubSiteName:'ROC_Store',
+    SubSiteTitle:'ROC Store Section',
+    List:{
+        'LogAccess':{
+            InternalName:'Log_Access',
+            DisplayName:'Log_Access',
+        },
+        'HistoryLog':{
+            InternalName:'HistoryLog',
+            DisplayName:'HistoryLog',
+        },
+        'Attachment':{
+            InternalName:'Attachment',
+            DisplayName:'Attachment',
+        },
+    },
+    Log:{
+        Access:{
+            Enable:false,
+        },
+        User:{
+            Enable:false,
+        },
+        ActionError:{
+            Enable:false,
+        },
+    },
+    Icon:{
+
+    },
+
+};
 
 
 
-// Log /////////////////////////////////////////////////////////////////////////////
-var Log_Access = 'Log_Access'; // Name of list
-var Disp_HistoryLog = 'HistoryLog'; // Display Name
-var Inter_HistoryLog = 'HistoryLog'; // Internal Name
+
+
 ////////////////////////////////////////////////////////////////////////////////////
 
-
-// Attachment //////////////////////////////////////////////////////////////////////
-var Attachment = 'Attachment'; // Name of list
-//var FileSupport = ['jpg','png','pdf','jpeg','gif','bmp','jpe','jfif','tiff','tif'];
-var FileSupport = ['All'];
-//End Attachment////////////////////////////////////////////////////////////////////

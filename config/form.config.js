@@ -10,14 +10,14 @@ FormMaster[0] = {
         Internal:'DataChemicals',
     },
     Attachment:{
-
+        Zone:['Zone1','Zone2'],
     },
     LinkUrl:{
-        AfterCloseForm: SiteUrl,
+        AfterCloseForm: Site.Url,
     },
     RunningNO:{
         Enable:true,
-        FormatRunningNO:'DC-',
+        Format:'DC-',
     },
     FieldData:{
         1:{

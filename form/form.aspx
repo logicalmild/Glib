@@ -35,7 +35,7 @@
 <link rel="stylesheet" href="../lib/jquery/css/jquery-ui.css">
 <link rel="stylesheet" href="../lib/summernote/dist/summernote.css">
 <script src="../lib/jquery/js/jquery.min.js"></script>
-<script src="../lib/SPGuide/SPGuide.js"></script>
+<script src="../lib/GlibFunc/GlibFunc.js"></script>
 <script src="../lib/bootstrap/js/popper.min.js"></script>
 <script src="../lib/bootstrap/js/bootstrap.min.js"></script>
 <script src="../lib/summernote/dist/summernote.js"></script>
@@ -51,8 +51,9 @@
 
 <!-- Local -->
 <link rel="stylesheet" href="css/form.css">
+<script src="../lib/GlibFunc/GlibFunc.js"></script>
 <script src="js/workflow.js"></script>
-<script src="js/Form2.js"></script>
+<script src="js/Form.js"></script>
 <script src="js/attachment.js"></script>
 <script src="js/main-form.js"></script>
  <!-- <script src="../app/js/Log.js"></script> -->
