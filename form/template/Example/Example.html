@@ -1,0 +1,141 @@
+<div class="container">
+    <p style="color:gray; text-align:center; font-size:25px; font-weight:bold;">Example</p>
+    <div class="row">
+        <div class="col-md-10 offset-md-2">
+            <p style="font-size:18px; color:black;">Title</p>
+            <input id="Title" type="text" class="form-control form-control-md col-md-8 col-sm-8" autocomplete="off">
+        </div>
+    </div><br>
+    <div class="row">   
+        <div class="col-md-3 offset-md-2">
+            <p>ผู้จัดการหน่วยงาน</p>
+            <input id="Manager" style="text-align:center;" type="text" class="PeoplePicker form-control form-control-sm col-md-12 col-sm-12" autocomplete="off">
+        </div>
+    </div><br>
+    <div class="row">
+        <div class="row col-md-10 offset-md-2">
+            <p style="font-size:18px; color:black;">Attachment</p>
+        </div>
+        <div class="row col-md-10 offset-md-2">
+            <div class="col-md-8" style="padding:0px;"> 
+                <input type="file" class="form-control-file" style="border-color:gray; border-width:1px; border-style:solid;" id="getFile" aria-describedby="fileHelp">
+            </div>
+            <div class="col-md-2">
+                <button onclick="uploadFile('AttachZone','getFile','attachloading','complete_upload_icon');" style="margin-left:10px;" type="button" class="btn-upload btn btn btn-primary btn-md">Upload</button>
+            </div>
+            <div class="col-md-1">
+                <div id="attachloading" style="display:none;" class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                <img id="complete_upload_icon" style="width:20px; height:20px; display:none;" src="https://scgchemicals.scg.com/lotusnotes/MaterialManagement/SitePages/web/asset/icon/correct.png">
+            </div><br>   
+            <div class="col-md-12" style="margin-top:15px;">
+                <ul id="AttachZone" class="form-inline" style="padding-left:0px;">
+                    <!-- <a href="#"><li class="attachfile">test.xls</li></a> -->
+                </ul>
+            </div>
+        </div><br>
+
+        <div class="col-md-7 offset-md-2">
+            <p style="font-size:18px; color:black;">Comment</p>
+            <div id="summernote1"></div>
+        </div>
+    </div><br><br>
+
+    <div id="component"></div>
+</div>
+
+
+<!-- <script type="text/javascript">
+ // Set inittial form  
+    // such as option in select , default date, default current user , default text and label
+    function SetInitialForm(){
+     
+        $('#summernote1').summernote({
+    
+        toolbar: [
+            // [groupName, [list of button]]
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['picture'],
+            ['para', ['paragraph']],
+            ['table', ['table']],
+
+        ],
+        popover: {
+                    image: [
+                        ['imagesize', ['imageSize100', 'imageSize50', 'imageSize25']],
+                        ['float', ['floatLeft', 'floatRight', 'floatNone']],
+                        ['remove', ['removeMedia']]
+                    ],
+                    link: [
+                        ['link', ['linkDialogShow', 'unlink']]
+                    ],
+                    air: [
+                        ['color', ['color']],
+                        ['font', ['bold', 'underline', 'clear']],
+                        ['para', ['ul', 'paragraph']],
+                        ['table', ['table']],
+                        ['insert', ['link', 'picture']]
+                    ]
+                }
+
+
+        });   
+
+        $('.note-popover , .popover').hide();
+        
+    }       
+
+    // Form display when user click new form .
+    // what you do want to display or change element new form.
+    // input action to this function
+    function FormNew(){
+        RenderFormNew();
+        
+        
+    }
+
+    // Form display when user click view an item.
+    // if user click new item this function will not be called.
+    function FormView(){
+        var query = '?$select=*,Author/Title,Author/Id&$expand=Author&$top=1&$filter=FormID eq \''+FormID+'\'';
+        var data = GetData(query);
+                    Queryfile();
+                    RenderView(data);
+    }
+
+    // Create View or switch view according to config.js
+    function SwitchViewTo(view,data){
+
+        switch(view){
+            
+            case 'Closed':
+                                break;
+            case 'Cancelled':
+                                break;
+            case 'Complete':
+                                break;
+
+        }
+
+    }
+    // End Create View or switch view according to config.js
+
+
+    function Queryfile(){
+        var query = '?$select=*&$expand=File&$top=100&$filter=FormID eq \''+FormID+'\'&$orderby=Created desc';
+        var data = GetItemByRestAPI(Attachment,query);
+        if(data){
+
+            $('#AttachZone').empty();
+            var str = '';
+
+            for(i=0;i<data.length;i++){
+                str+='<a href="'+SiteUrl+'/Attachment/'+data[i].File.Name+'" download="'+data[i].Title+'"><li style="cursor:pointer;" class="attachfile">'+data[i].Title+'<br><p style="margin-bottom:0px; text-align:center;">'+ConvertDate(data[i].TimeStamp)+'</p></li></a>';
+            }
+
+            $('#AttachZone').append(str);
+
+        }
+    } 
+
+
+</script> -->

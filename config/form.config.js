@@ -3,11 +3,11 @@ var FormMaster = {};
 
 FormMaster[0] = {
     Code :'',
-    FormName :'FormDataChemicals',
-    FileName :'FormDataChemicals',
+    FormName :'Example',
+    FileName :'Example',
     List:{
-        Name:'Data Chemicals',
-        Internal:'DataChemicals',
+        Name:'Glib',
+        Internal:'Glib',
     },
     Attachment:{
         Zone:['Zone1','Zone2'],

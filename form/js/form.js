@@ -19,106 +19,111 @@ var Form = {
     Workflow:null,
     FormStep:null,
     TempData:null,
-    Attachment:{
-        Default:function(){
-            $('#MainModal').modal();
-            $(".modal-dialog").css("max-width", "800px");
-            AddLoading();
-            $('#TitleModal').text('Attachfile');
+    DefaultColumn:{
+        1:{
+            Title:'FormID',
+            Description:'ID of Form',
+            Type:'Singleline of Text',
+            DefaultValue:'',
+            Required:false,
+        },
+
+    },
+    File:{
+        // Default:function(){
+        //     $('#MainModal').modal();
+        //     $(".modal-dialog").css("max-width", "800px");
+        //     AddLoading();
+        //     $('#TitleModal').text('Attachfile');
         
-            // Init modal attachfile
-            var Dom = '';
-            Dom+='';
-            Dom+='<center>';
-            Dom+='<div id="area_attachfile" class="form-group form-inline">';
-            Dom+='    <input type="file" class="form-control-file col-md-9" style="border-color:gray; border-width:1px; border-style:solid;" id="getFile" aria-describedby="fileHelp">';
-            Dom+='    <button onclick="uploadFile();" style="margin-left:10px;" type="button" class="btn btn btn-primary btn-sm col-md-2">Upload</button>';
-            Dom+='<div style="display: none;" id="attachloading" class="lds-ring"><div></div><div></div><div></div><div></div></div>';
-            Dom+='</div>';
-            Dom+='</center>';
-            $('#ModalBody').empty();
-            $('#ModalBody').append(Dom);
-            Loadfile();
+        //     // Init modal attachfile
+        //     var Dom = '';
+        //     Dom+='';
+        //     Dom+='<center>';
+        //     Dom+='<div id="area_attachfile" class="form-group form-inline">';
+        //     Dom+='    <input type="file" class="form-control-file col-md-9" style="border-color:gray; border-width:1px; border-style:solid;" id="getFile" aria-describedby="fileHelp">';
+        //     Dom+='    <button onclick="uploadFile();" style="margin-left:10px;" type="button" class="btn btn btn-primary btn-sm col-md-2">Upload</button>';
+        //     Dom+='<div style="display: none;" id="attachloading" class="lds-ring"><div></div><div></div><div></div><div></div></div>';
+        //     Dom+='</div>';
+        //     Dom+='</center>';
+        //     $('#ModalBody').empty();
+        //     $('#ModalBody').append(Dom);
+        //     Loadfile();
             
-            function Loadfile(){
+        //     function Loadfile(){
         
-            var query = '?$select=*,Author/Title&$expand=Author&$top=100&$filter=FormID eq \''+FormID+'\'';
-            var data = GetItemByRestAPI(Attachment,query);
-            var Result = '';
-            if(data){
-                for(i=0;i<data.length;i++){
-                    Result+='<tr style="border-style:solid; border-width:1px; border-color:lightgray;">  ';
-                    Result+='    <td style="text-align:left;" colspan="1">'+(i+1)+'</td>  ';
-                    Result+='    <td style="text-align:left;" colspan="1"><a target="_blank" href="https://scgchemicals.scg.com/lotusnotes/TPE_Roto/Attachment/'+data[i].Title+'">'+data[i].Title+'</a></td>  ';
-                    Result+='    <td style="text-align:left;" colspan="1">'+ConvertDate(data[i].Created)+'</td>  ';
-                    Result+='    <td style="text-align:left;" colspan="1">'+data[i].Author.Title+'</td>';
-                    if(Form.FormStatus == 'Complete' || Form.FormStatus == 'Reject'){
-                        Result+='    <td style="text-align:left;" colspan="1"></td>';
-                        $('#area_attachfile').hide();
+        //     var query = '?$select=*,Author/Title&$expand=Author&$top=100&$filter=FormID eq \''+FormID+'\'';
+        //     var data = GetItemByRestAPI(Attachment,query);
+        //     var Result = '';
+        //     if(data){
+        //         for(i=0;i<data.length;i++){
+        //             Result+='<tr style="border-style:solid; border-width:1px; border-color:lightgray;">  ';
+        //             Result+='    <td style="text-align:left;" colspan="1">'+(i+1)+'</td>  ';
+        //             Result+='    <td style="text-align:left;" colspan="1"><a target="_blank" href="https://scgchemicals.scg.com/lotusnotes/TPE_Roto/Attachment/'+data[i].Title+'">'+data[i].Title+'</a></td>  ';
+        //             Result+='    <td style="text-align:left;" colspan="1">'+ConvertDate(data[i].Created)+'</td>  ';
+        //             Result+='    <td style="text-align:left;" colspan="1">'+data[i].Author.Title+'</td>';
+        //             if(Form.FormStatus == 'Complete' || Form.FormStatus == 'Reject'){
+        //                 Result+='    <td style="text-align:left;" colspan="1"></td>';
+        //                 $('#area_attachfile').hide();
                         
+        //             }
+        //             else{
+        //                 Result+='    <td style="text-align:left;" colspan="1"><a onclick="Removefile(\''+data[i].ID+'\');" type="button" class="btn btn btn-primary btn-md" style="background-color:rgb(138, 28, 28); border-color:rgb(138, 28, 28); color:white; font-weight:bold;"><i class="fa fa-remove"></i></a></td>';
+        //             }
+        //             Result+='</tr>';
+        //         }
+                
+        //     }
+        
+        
+        //     var Table = '';
+        //         Table+='';
+        //         Table+='    <table class="table shadow ">';
+        //         Table+='        <thead style="background-color:lightgray; color:black; border-color:lightgray;">';
+        //         Table+='            <tr>';
+        //         Table+='                <th scope="col"><p style="font-weight:normal; margin-bottom:0px;">No</p></th>';
+        //         Table+='                <th scope="col"><p style="font-weight:normal; margin-bottom:0px;">File name</p></th>';
+        //         Table+='                <th scope="col"><p style="font-weight:normal; margin-bottom:0px;">Upload</p></th>';
+        //         Table+='                <th scope="col"><p style="font-weight:normal; margin-bottom:0px;">Upload by</p></th>';
+        //         Table+='                <th scope="col"><p style="font-weight:normal; margin-bottom:0px;">Remove</p></th>';
+        //         Table+='            </tr>';
+        //         Table+='        </thead>';
+        //         Table+='        <tbody id="ResultFile">';
+        //         Table+= Result;
+        //         Table+='        </tbody>';
+        //         Table+='    </table>';
+        
+        //         $('#ModalBody').prepend(Table);
+        
+        
+        //     }
+        // },
+        QueryFile:function(){
+            var query = '?$select=*&$expand=File&$top=100&$filter=FormID eq \''+Form.FormID+'\'&$orderby=Created desc';
+            var data = GetItemByRestAPI(Site.List.Attachment,query);
+            if(data){
+                var Zone = Form.Attachment.Zone;
+                var ZoneSelector = '';
+
+                for(i=0;i<Zone.length;i++){
+                    ZoneSelector += '#'+Zone[i];
+                    if(i<Zone.length-1){
+                        ZoneSelector += ',';
                     }
-                    else{
-                        Result+='    <td style="text-align:left;" colspan="1"><a onclick="Removefile(\''+data[i].ID+'\');" type="button" class="btn btn btn-primary btn-md" style="background-color:rgb(138, 28, 28); border-color:rgb(138, 28, 28); color:white; font-weight:bold;"><i class="fa fa-remove"></i></a></td>';
-                    }
-                    Result+='</tr>';
+                    
                 }
                 
-            }
-        
-        
-            var Table = '';
-                Table+='';
-                Table+='    <table class="table shadow ">';
-                Table+='        <thead style="background-color:lightgray; color:black; border-color:lightgray;">';
-                Table+='            <tr>';
-                Table+='                <th scope="col"><p style="font-weight:normal; margin-bottom:0px;">No</p></th>';
-                Table+='                <th scope="col"><p style="font-weight:normal; margin-bottom:0px;">File name</p></th>';
-                Table+='                <th scope="col"><p style="font-weight:normal; margin-bottom:0px;">Upload</p></th>';
-                Table+='                <th scope="col"><p style="font-weight:normal; margin-bottom:0px;">Upload by</p></th>';
-                Table+='                <th scope="col"><p style="font-weight:normal; margin-bottom:0px;">Remove</p></th>';
-                Table+='            </tr>';
-                Table+='        </thead>';
-                Table+='        <tbody id="ResultFile">';
-                Table+= Result;
-                Table+='        </tbody>';
-                Table+='    </table>';
-        
-                $('#ModalBody').prepend(Table);
-        
-        
-            }
-        },
-        QueryFile:function(){
-            alert('test');
-            // debugger;
-            // var query = '?$select=*&$expand=File&$top=100&$filter=FormID eq \''+Form.FormID+'\'&$orderby=Created desc';
-            // var data = GetItemByRestAPI(Site.List.Attachment,query);
-            // if(data){
-            //     var Zone = Form.Attachment.Zone;
-            //     var ZoneSelector = '';
-
-            //     for(i=0;i<Zone.length;i++){
-            //         ZoneSelector += '#'+Zone[i];
-            //         if(i<Zone.length-1){
-            //             ZoneSelector += ',';
-            //         }
+                $(ZoneSelector).empty();
+                
+    
+                for(i=0;i<data.length;i++){
+                    var str = '';
+                    var check = Zone.indexOf(data[i].GroupID);
+                    str='<a href="'+Site.Url+'/Attachment/'+data[i].File.Name+'" download="'+data[i].Title+'"><li style="cursor:pointer;" class="attachfile">'+data[i].Title+'<br><p style="margin-bottom:0px; text-align:center;">'+ConvertDate(data[i].TimeStamp)+'</p></li></a>';
                     
-            //     }
-                
-            //     $(ZoneSelector).empty();
-                
-    
-            //     for(i=0;i<data.length;i++){
-            //         var str = '';
-            //         var check = Zone.indexOf(data[i].GroupID);
-            //         str='<a href="'+Site.Url+'/Attachment/'+data[i].File.Name+'" download="'+data[i].Title+'"><li style="cursor:pointer;" class="attachfile">'+data[i].Title+'<br><p style="margin-bottom:0px; text-align:center;">'+ConvertDate(data[i].TimeStamp)+'</p></li></a>';
-                    
-            //         $('#'+Zone[check]).append(str);
-            //     }
-    
-                
-    
-            // }
+                    $('#'+Zone[check]).append(str);
+                }
+            }
         
         
         },
@@ -496,6 +501,15 @@ var Form = {
             $('#TitleModal').text('Loading...');
             var loading ='<center><div class="loader" style="margin-top:15%; margin-bottom:15%;"></div></center>';
             $('#ModalBody').append(loading);
+        },
+        FieldToList:function(){
+          
+            
+      
+            
+          
+              
+            
         },
     },
     Set:{
@@ -1965,6 +1979,7 @@ function FormStart(){
     Form.User.AddToGroupMember();
     Form.Get.ConfigData();
     Form.Map();
+    // Form.Add.FieldToList();
     Form.Routing.View();
     Form.Render.Template();
     Form.Render.Navbar();
@@ -1977,10 +1992,66 @@ function FormStart(){
     Form.Init.Button();
     Form.Init.Input();
     Form.Set.Initial();
-    // Form.Attachment.QueryFile();
     Form.Set.RequireField();
     Form.Set.SubmitOption();
+    Form.File.QueryFile();
+    
+    var IsCol = CheckFieldExist('FirstName');
+    alert(IsCol);
+    if(!IsCol){
+        AddColumn('FirstName');
+    }
     
     // $('#Title_ActionBy').text(CurrentUser.Name);
 }
 
+function AddColumn(NewField){
+
+            // var clientContext = new SP.ClientContext.get_current();
+            // var oWebsite = clientContext.get_web();
+            // //Getting reference to the list
+   
+            // oList = clientContext.get_web().get_lists().getByTitle(Form.List.Name);
+
+            // // Get filed collection
+            // var fldCollection = oList.get_fields();
+        
+            // var f1 = clientContext.castTo(fldCollection.addFieldAsXml('<Field Type="Text" DisplayName="+NewField+" Name="+NewField+" />', true, SP.AddFieldOptions.addToDefaultContentType), SP.FieldText);
+            // f1.set_title(NewField);
+            // f1.set_description("sample desc");
+            // f1.update();       
+            // clientContext.executeQueryAsync();
+}
+
+function CheckFieldExist(Column){
+
+    var requestUri = Site.Url + "/_api/web/lists/getByTitle('"+Form.List.Name+"')/fields";
+    var requestHeaders = {
+    "accept": "application/json;odata=verbose"
+    }
+    var IsExist = false;
+
+    $.ajax({
+        url: requestUri,
+        type: 'GET',
+        dataType: 'json',
+        async: false,
+        headers: requestHeaders,
+        success: function (data) 
+        {      
+            data = data.d.results; 
+            for(i in data){
+                if(data[i].InternalName == Column || data[i].Title == Column){
+                    IsExist = true;
+                    break;
+                }
+            }
+            
+        },
+        error: function ajaxError(response) {
+            console.log(response.status + ' ' + response.statusText);
+        }
+    });
+
+    return IsExist;
+}
